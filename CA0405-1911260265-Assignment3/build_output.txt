@@ -1,0 +1,14 @@
+-rwxr-xr-x 1 mdfal mdfal  15208 Nov 19 11:30 libenc.so
+-rwxr-xr-x 1 mdfal mdfal  16120 Nov 19 11:30 q1_app_dynamic
+-rwxr-xr-x 1 mdfal mdfal 817088 Nov 19 11:30 q1_app_static
+-rwxr-xr-x 1 mdfal mdfal  16288 Nov 19 11:30 q1_dlopen
+--- file types ---
+q1_app_static:  ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=441d071ab490a7cc4b66e007d4b2aa2f6839c5b1, for GNU/Linux 3.2.0, not stripped
+q1_app_dynamic: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ff4f468f2a3d095e550b12bba4e2b0be5f304c21, for GNU/Linux 3.2.0, not stripped
+--- ldd dynamic ---
+	linux-vdso.so.1 (0x00007d9c6361a000)
+	libenc.so => /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so (0x00007d9c63608000)
+	libc.so.6 => /usr/lib/x86_64-linux-gnu/libc.so.6 (0x00007d9c63200000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007d9c6361c000)
+--- ldd static ---
+	not a dynamic executable

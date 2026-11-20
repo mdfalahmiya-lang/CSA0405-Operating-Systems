@@ -1,0 +1,28 @@
+=== completed LRU program ===
+3 frames: FIFO 15, LRU 12, Optimal 9
+4 frames: FIFO 10, LRU 8, Optimal 8
+Belady string, FIFO: 3 frames 9 faults, 4 frames 10 faults
+=== simulation ===
+string,frames,FIFO,LRU,Optimal,Clock
+locality,3,797,794,667,795
+locality,4,749,752,614,750
+locality,5,715,710,571,712
+locality,6,690,683,536,689
+locality,7,668,659,504,659
+locality,8,646,645,473,642
+locality,9,634,630,446,628
+locality,10,623,616,422,616
+random,3,928,928,783,927
+random,4,907,908,727,907
+random,5,878,882,678,877
+random,6,858,855,635,856
+random,7,841,843,600,843
+random,8,819,821,567,816
+random,9,803,800,539,798
+random,10,791,785,513,785
+
+timing (ms for 100000 references, 8 frames, median of 7 runs)
+FIFO         1.84  (faults 464289)
+LRU          3.36  (faults 461419)
+Optimal      3.76  (faults 324982)
+Clock        2.76  (faults 462301)

@@ -1,0 +1,44 @@
+=== EAT ===
+memory 100 ns, fault service 8000000 ns (8 ms)
+fault_rate  EAT_ns  slowdown_x
+1 in 1000     8099.90      81.00
+1 in 100000    180.00       1.80
+1 in 1000000   108.00       1.08
+page-fault rate for a 10% slowdown: 1 in 799990
+=== growth ===
+total_MB  pass1_ms  pass2_ms  minor_faults  major_faults
+     512     302.2       2.0        131073             0
+    1024     455.5       3.8        262143             0
+    1536     623.3       6.1        393215             0
+    2048     878.8       8.3        524287             0
+    2560     959.7      10.0        655359             0
+    3072    1223.2      12.4        786431             0
+    3584    1312.1      14.7        917503             0
+    4096    1448.4      18.1       1048575             0
+    4608    1959.8      35.1       1179647             0
+    5120    2161.7      45.2       1310719             0
+    5632    2449.3      84.3       1441791             0
+    6144    2497.4     100.3       1572863             0
+    6656    2633.0      28.0       1703935             0
+    7168    3081.3    1090.5       1901569         15306
+    7680    3263.0    6871.0       3602961        329202
+    8192    3576.3    7198.1       3893450        300839
+=== sequential vs random ===
+sequential first touch : 65538 minor, 5 major,    80.40 ms (1227 ns/page)
+sequential second pass : 0 minor, 5 major,     1.21 ms (  18 ns/page)
+random     first touch : 65536 minor, 5 major,    82.68 ms (1262 ns/page)
+random     second pass : 0 minor, 5 major,     1.39 ms (  21 ns/page)
+checksum 8355840
+=== copy-on-write ===
+parent before fork: RSS 513.8 MB, MemFree 6892 MB
+parent before fork: Rss 526232 kB, Shared_Clean 1156 kB, Private_Dirty 524388 kB
+child  after fork : RSS 512.9 MB (PTEs shared, pages read-only)
+child  after fork: Rss 525420 kB, Shared_Clean 1032 kB, Private_Dirty 32 kB
+child  after write: RSS 513.1 MB
+child  after write: Rss 525420 kB, Shared_Clean 1032 kB, Private_Dirty 524320 kB
+parent while child holds its copy: MemFree 6364 MB
+parent after child exit: MemFree 6876 MB
+=== free memory before/after ===
+               total        used        free      shared  buff/cache   available
+Mem:            7793         468        7386           3          43        7324
+Swap:           2048          83        1964

@@ -1,0 +1,141 @@
+===== sizes =====
+q1_app_static 817088 bytes
+q1_app_dynamic 16120 bytes
+q1_dlopen 16288 bytes
+libenc.so 15208 bytes
+===== addresses (q1_maps) =====
+pid 542, selected mappings:
+58873495b000-58873495c000 r--p 00000000 08:30 58535                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/q1_maps
+58873495c000-58873495d000 r-xp 00001000 08:30 58535                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/q1_maps
+58873495d000-58873495e000 r--p 00002000 08:30 58535                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/q1_maps
+58873495e000-58873495f000 r--p 00002000 08:30 58535                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/q1_maps
+58873495f000-588734960000 rw-p 00003000 08:30 58535                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/q1_maps
+588767d81000-588767da2000 rw-p 00000000 00:00 0                          [heap]
+732391c00000-732391c28000 r--p 00000000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+732391c28000-732391dc0000 r-xp 00028000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+732391dc0000-732391e0e000 r--p 001c0000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+732391e0e000-732391e12000 r--p 0020e000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+732391e12000-732391e14000 rw-p 00212000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ffcfae7f000-7ffcfaea0000 rw-p 00000000 00:00 0                          [stack]
+===== dlopen =====
+library : enclib 1.0
+first   : 18 3b 34 31
+mapped  : ./libenc.so at 0x72f9b79e3000
+===== optional module (encryption not requested) =====
+encryption requested: no
+libenc mapped after the operation: no
+===== optional module (encryption requested) =====
+encryption requested: yes
+library: enclib 1.0, first byte 18
+libenc mapped during the operation: yes
+libenc mapped after the operation: no
+===== startup time (300 runs) =====
+static : 300 runs, median 0.451 ms, average 0.455 ms, p95 0.573 ms, worst 0.812 ms
+dynamic: 300 runs, median 0.711 ms, average 0.787 ms, p95 1.295 ms, worst 2.923 ms
+lazy   : 300 runs, median 0.676 ms, average 0.789 ms, p95 1.702 ms, worst 3.105 ms
+===== memory (/usr/bin/time -v) =====
+--- q1_app_static
+	Maximum resident set size (kbytes): 592
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 42
+--- q1_app_dynamic
+	Maximum resident set size (kbytes): 1660
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 84
+--- q1_lazy
+	Maximum resident set size (kbytes): 1648
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 75
+===== library replacement (no recompile) =====
+--- version 1
+library : enclib 1.0
+cipher  : 183b34317a2e283b34293c3f287a6b6a6a6a7a2e357a3b3939352f342e7a6e6e6d6b
+plain   : Bank transfer 1000 to account 4471
+--- version 2 (libenc.so replaced)
+library : enclib 2.0
+cipher  : cfece3e6adf9ffece3feebe8ffadbcbdbdbdadf9e2adeceeeee2f8e3f9adb9b9babc
+plain   : Bank transfer 1000 to account 4471
+--- restored
+library : enclib 1.0
+cipher  : 183b34317a2e283b34293c3f287a6b6a6a6a7a2e357a3b3939352f342e7a6e6e6d6b
+plain   : Bank transfer 1000 to account 4471
+===== missing library =====
+./q1_app_dynamic: error while loading shared libraries: libenc.so: cannot open shared object file: No such file or directory
+exit status 127
+===== two copies sharing the library =====
+pid 1471 uses enclib 1.0
+pid 1472 uses enclib 1.0
+--- pid 1471 maps
+739453562000-739453563000 r--p 00000000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+739453563000-739453564000 r-xp 00001000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+739453564000-739453565000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+739453565000-739453566000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+739453566000-739453567000 rw-p 00003000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+--- pid 1471 smaps (libenc)
+739453562000-739453563000 r--p 00000000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+739453563000-739453564000 r-xp 00001000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+739453564000-739453565000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+739453565000-739453566000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   4 kB
+Pss_Dirty:             4 kB
+Shared_Clean:          0 kB
+Private_Clean:         0 kB
+739453566000-739453567000 rw-p 00003000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   4 kB
+Pss_Dirty:             4 kB
+Shared_Clean:          0 kB
+Private_Clean:         0 kB
+--- pid 1472 maps
+7da31d407000-7da31d408000 r--p 00000000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+7da31d408000-7da31d409000 r-xp 00001000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+7da31d409000-7da31d40a000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+7da31d40a000-7da31d40b000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+7da31d40b000-7da31d40c000 rw-p 00003000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+--- pid 1472 smaps (libenc)
+7da31d407000-7da31d408000 r--p 00000000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+7da31d408000-7da31d409000 r-xp 00001000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+7da31d409000-7da31d40a000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+7da31d40a000-7da31d40b000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   4 kB
+Pss_Dirty:             4 kB
+Shared_Clean:          0 kB
+Private_Clean:         0 kB
+7da31d40b000-7da31d40c000 rw-p 00003000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   4 kB
+Pss_Dirty:             4 kB
+Shared_Clean:          0 kB
+Private_Clean:         0 kB

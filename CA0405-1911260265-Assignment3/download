@@ -1,0 +1,27 @@
+# build products
+*.o
+*.a
+*.so
+Q1/q1_app_static
+Q1/q1_app_dynamic
+Q1/q1_dlopen
+Q1/q1_maps
+Q1/q1_hold
+Q1/q1_time
+Q2/q2_translate
+Q2/q2_translate_2048
+Q2/q2_fragment
+Q2/q2_eat
+Q2/q2_bounds
+Q3/q3_segment
+Q3/q3_segv
+Q3/q3_frag
+Q3/q3_maps
+Q4/q4_eat
+Q4/q4_growth
+Q4/q4_cow
+Q5/q5_lru
+Q5/q5_sim
+Q6/q6_raid
+Q7/q7_rt
+Q7/q7_sim

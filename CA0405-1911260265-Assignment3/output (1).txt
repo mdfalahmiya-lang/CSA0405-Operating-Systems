@@ -1,0 +1,41 @@
+=== translate 1024 ===
+    0 -> page 0 offset    0 : physical 5120
+ 1500 -> page 1 offset  476 : physical 2524
+ 3100 -> page 3 offset   28 : physical 7196
+ 6200 -> page 6 offset   56 : physical 3128
+ 9000 -> page 8 offset  808 : invalid address
+ 2049 -> page 2 offset    1 : page fault
+=== translate 2048 ===
+    0 -> page 0 offset    0 : physical 10240
+ 1500 -> page 0 offset 1500 : physical 11740
+ 3100 -> page 1 offset 1052 : physical 5148
+ 6200 -> page 3 offset   56 : physical 14392
+ 9000 -> page 4 offset  808 : physical 808
+ 2049 -> page 1 offset    1 : physical 4097
+=== fragmentation ===
+
+page_size  total_bytes  allocated  wasted  waste_percent  avg_waste
+     1024    216743972  216798208     54236         0.03        542
+     4096    216743972  216956928    212956         0.10       2130
+  2097152    216743972  320864256 104120284        48.04    1041203
+=== EAT ===
+TLB probe 10 ns, memory access 100 ns
+hit_ratio  EAT_with_TLB_ns  EAT_no_TLB_ns
+     0.80           130.00         200.00
+     0.95           115.00         200.00
+     0.99           111.00         200.00
+=== bounds ===
+page size 4096, mapping 0x7738283a7000..0x7738283a8fff
+offset 0      -> ok
+offset 4095 -> ok (last byte of page 0)
+offset 4096 -> ok (first byte of page 1)
+offset 8191 -> ok (last byte of page 1)
+SIGSEGV at address 0x7738283a9000 (code 1)
+access at offset 8192 was refused by the MMU
+=== system page size ===
+4096
+=== /usr/bin/time -v ===
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+	Maximum resident set size (kbytes): 1708
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 76

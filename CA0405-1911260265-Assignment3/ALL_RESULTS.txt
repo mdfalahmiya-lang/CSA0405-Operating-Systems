@@ -1,0 +1,562 @@
+CSA0405 Assignment 3 - full transcript
+date: 2026-11-19 11:30:20 UTC
+host: Linux 6.18.58.1-microsoft-standard-WSL2 x86_64
+
+===== Q1 build =====
+-rwxr-xr-x 1 mdfal mdfal  15208 Nov 19 11:30 libenc.so
+-rwxr-xr-x 1 mdfal mdfal  16120 Nov 19 11:30 q1_app_dynamic
+-rwxr-xr-x 1 mdfal mdfal 817088 Nov 19 11:30 q1_app_static
+-rwxr-xr-x 1 mdfal mdfal  16288 Nov 19 11:30 q1_dlopen
+--- file types ---
+q1_app_static:  ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=441d071ab490a7cc4b66e007d4b2aa2f6839c5b1, for GNU/Linux 3.2.0, not stripped
+q1_app_dynamic: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ff4f468f2a3d095e550b12bba4e2b0be5f304c21, for GNU/Linux 3.2.0, not stripped
+--- ldd dynamic ---
+	linux-vdso.so.1 (0x00007d9c6361a000)
+	libenc.so => /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so (0x00007d9c63608000)
+	libc.so.6 => /usr/lib/x86_64-linux-gnu/libc.so.6 (0x00007d9c63200000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007d9c6361c000)
+--- ldd static ---
+	not a dynamic executable
+
+===== Q1 =====
+===== sizes =====
+q1_app_static 817088 bytes
+q1_app_dynamic 16120 bytes
+q1_dlopen 16288 bytes
+libenc.so 15208 bytes
+===== addresses (q1_maps) =====
+pid 542, selected mappings:
+58873495b000-58873495c000 r--p 00000000 08:30 58535                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/q1_maps
+58873495c000-58873495d000 r-xp 00001000 08:30 58535                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/q1_maps
+58873495d000-58873495e000 r--p 00002000 08:30 58535                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/q1_maps
+58873495e000-58873495f000 r--p 00002000 08:30 58535                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/q1_maps
+58873495f000-588734960000 rw-p 00003000 08:30 58535                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/q1_maps
+588767d81000-588767da2000 rw-p 00000000 00:00 0                          [heap]
+732391c00000-732391c28000 r--p 00000000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+732391c28000-732391dc0000 r-xp 00028000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+732391dc0000-732391e0e000 r--p 001c0000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+732391e0e000-732391e12000 r--p 0020e000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+732391e12000-732391e14000 rw-p 00212000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ffcfae7f000-7ffcfaea0000 rw-p 00000000 00:00 0                          [stack]
+===== dlopen =====
+library : enclib 1.0
+first   : 18 3b 34 31
+mapped  : ./libenc.so at 0x72f9b79e3000
+===== optional module (encryption not requested) =====
+encryption requested: no
+libenc mapped after the operation: no
+===== optional module (encryption requested) =====
+encryption requested: yes
+library: enclib 1.0, first byte 18
+libenc mapped during the operation: yes
+libenc mapped after the operation: no
+===== startup time (300 runs) =====
+static : 300 runs, median 0.451 ms, average 0.455 ms, p95 0.573 ms, worst 0.812 ms
+dynamic: 300 runs, median 0.711 ms, average 0.787 ms, p95 1.295 ms, worst 2.923 ms
+lazy   : 300 runs, median 0.676 ms, average 0.789 ms, p95 1.702 ms, worst 3.105 ms
+===== memory (/usr/bin/time -v) =====
+--- q1_app_static
+	Maximum resident set size (kbytes): 592
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 42
+--- q1_app_dynamic
+	Maximum resident set size (kbytes): 1660
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 84
+--- q1_lazy
+	Maximum resident set size (kbytes): 1648
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 75
+===== library replacement (no recompile) =====
+--- version 1
+library : enclib 1.0
+cipher  : 183b34317a2e283b34293c3f287a6b6a6a6a7a2e357a3b3939352f342e7a6e6e6d6b
+plain   : Bank transfer 1000 to account 4471
+--- version 2 (libenc.so replaced)
+library : enclib 2.0
+cipher  : cfece3e6adf9ffece3feebe8ffadbcbdbdbdadf9e2adeceeeee2f8e3f9adb9b9babc
+plain   : Bank transfer 1000 to account 4471
+--- restored
+library : enclib 1.0
+cipher  : 183b34317a2e283b34293c3f287a6b6a6a6a7a2e357a3b3939352f342e7a6e6e6d6b
+plain   : Bank transfer 1000 to account 4471
+===== missing library =====
+./q1_app_dynamic: error while loading shared libraries: libenc.so: cannot open shared object file: No such file or directory
+exit status 127
+===== two copies sharing the library =====
+pid 1471 uses enclib 1.0
+pid 1472 uses enclib 1.0
+--- pid 1471 maps
+739453562000-739453563000 r--p 00000000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+739453563000-739453564000 r-xp 00001000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+739453564000-739453565000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+739453565000-739453566000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+739453566000-739453567000 rw-p 00003000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+--- pid 1471 smaps (libenc)
+739453562000-739453563000 r--p 00000000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+739453563000-739453564000 r-xp 00001000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+739453564000-739453565000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+739453565000-739453566000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   4 kB
+Pss_Dirty:             4 kB
+Shared_Clean:          0 kB
+Private_Clean:         0 kB
+739453566000-739453567000 rw-p 00003000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   4 kB
+Pss_Dirty:             4 kB
+Shared_Clean:          0 kB
+Private_Clean:         0 kB
+--- pid 1472 maps
+7da31d407000-7da31d408000 r--p 00000000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+7da31d408000-7da31d409000 r-xp 00001000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+7da31d409000-7da31d40a000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+7da31d40a000-7da31d40b000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+7da31d40b000-7da31d40c000 rw-p 00003000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+--- pid 1472 smaps (libenc)
+7da31d407000-7da31d408000 r--p 00000000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+7da31d408000-7da31d409000 r-xp 00001000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+7da31d409000-7da31d40a000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   2 kB
+Pss_Dirty:             0 kB
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+7da31d40a000-7da31d40b000 r--p 00002000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   4 kB
+Pss_Dirty:             4 kB
+Shared_Clean:          0 kB
+Private_Clean:         0 kB
+7da31d40b000-7da31d40c000 rw-p 00003000 08:30 58540                      /home/mdfal/CSA0405-1911260265-Assignment3/Q1/libenc.so
+Rss:                   4 kB
+Pss:                   4 kB
+Pss_Dirty:             4 kB
+Shared_Clean:          0 kB
+Private_Clean:         0 kB
+
+===== Q2 =====
+=== translate 1024 ===
+    0 -> page 0 offset    0 : physical 5120
+ 1500 -> page 1 offset  476 : physical 2524
+ 3100 -> page 3 offset   28 : physical 7196
+ 6200 -> page 6 offset   56 : physical 3128
+ 9000 -> page 8 offset  808 : invalid address
+ 2049 -> page 2 offset    1 : page fault
+=== translate 2048 ===
+    0 -> page 0 offset    0 : physical 10240
+ 1500 -> page 0 offset 1500 : physical 11740
+ 3100 -> page 1 offset 1052 : physical 5148
+ 6200 -> page 3 offset   56 : physical 14392
+ 9000 -> page 4 offset  808 : physical 808
+ 2049 -> page 1 offset    1 : physical 4097
+=== fragmentation ===
+
+page_size  total_bytes  allocated  wasted  waste_percent  avg_waste
+     1024    216743972  216798208     54236         0.03        542
+     4096    216743972  216956928    212956         0.10       2130
+  2097152    216743972  320864256 104120284        48.04    1041203
+=== EAT ===
+TLB probe 10 ns, memory access 100 ns
+hit_ratio  EAT_with_TLB_ns  EAT_no_TLB_ns
+     0.80           130.00         200.00
+     0.95           115.00         200.00
+     0.99           111.00         200.00
+=== bounds ===
+page size 4096, mapping 0x7738283a7000..0x7738283a8fff
+offset 0      -> ok
+offset 4095 -> ok (last byte of page 0)
+offset 4096 -> ok (first byte of page 1)
+offset 8191 -> ok (last byte of page 1)
+SIGSEGV at address 0x7738283a9000 (code 1)
+access at offset 8192 was refused by the MMU
+=== system page size ===
+4096
+=== /usr/bin/time -v ===
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+	Maximum resident set size (kbytes): 1708
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 76
+
+===== Q3 =====
+=== segment translation ===
+(0,     0) -> code base 4096 + 0 = physical 4096
+(0,  2047) -> code base 4096 + 2047 = physical 6143
+(0,  2048) -> segmentation fault: offset 2048 >= limit 2048 of code
+(1,   100) -> data base 16384 + 100 = physical 16484
+(1,  4095) -> data base 16384 + 4095 = physical 20479
+(2,   700) -> stack base 65536 + 700 = physical 66236
+(3,  6000) -> heap base 32768 + 6000 = physical 38768
+(3,  6144) -> segmentation fault: offset 6144 >= limit 6144 of heap
+=== segmentation fault ===
+about to write to a NULL pointer
+caught SIGSEGV: address (nil), code 1 (SEGV_MAPERR - no mapping)
+exit status 3
+=== fragmentation ===
+segment  size_KB  start_KB  result
+      1      281         0  loaded
+      2      333       281  loaded
+      3       95       614  loaded
+      4       80       709  loaded
+      5      363       789  loaded
+      6      516      1152  loaded
+      7      492      1668  loaded
+      8      345      2160  loaded
+      9      143      2505  loaded
+     10      181      2648  loaded
+     11       55      2829  loaded
+     12      369      2884  loaded
+     13      706      3253  loaded
+     14      544         -  no block
+     15      105      3959  loaded
+     16      620         -  no block
+     17       94         -  no block
+     18      546         -  no block
+     19      392         -  no block
+     20      452         -  no block
+after 20 loads         free      32 KB in  1 blocks, largest     32 KB, external fragmentation   0.0%
+after removing 10      free    2272 KB in  7 blocks, largest    843 KB, external fragmentation  62.9%
+900 KB request after removals: FAILS although total free is larger
+final state            free    2272 KB in  7 blocks, largest    843 KB, external fragmentation  62.9%
+=== maps ===
+pid 1557
+5664ee4dc000-5664ee4dd000 r--p 00000000 08:30 58557                      /home/mdfal/CSA0405-1911260265-Assignment3/Q3/q3_maps
+5664ee4dd000-5664ee4de000 r-xp 00001000 08:30 58557                      /home/mdfal/CSA0405-1911260265-Assignment3/Q3/q3_maps
+5664ee4de000-5664ee4df000 r--p 00002000 08:30 58557                      /home/mdfal/CSA0405-1911260265-Assignment3/Q3/q3_maps
+5664ee4df000-5664ee4e0000 r--p 00002000 08:30 58557                      /home/mdfal/CSA0405-1911260265-Assignment3/Q3/q3_maps
+5664ee4e0000-5664ee4e1000 rw-p 00003000 08:30 58557                      /home/mdfal/CSA0405-1911260265-Assignment3/Q3/q3_maps
+566500074000-566500095000 rw-p 00000000 00:00 0                          [heap]
+7ea727600000-7ea727628000 r--p 00000000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ea727628000-7ea7277c0000 r-xp 00028000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ea7277c0000-7ea72780e000 r--p 001c0000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ea72780e000-7ea727812000 r--p 0020e000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ea727812000-7ea727814000 rw-p 00212000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ffe073e6000-7ffe07407000 rw-p 00000000 00:00 0                          [stack]
+=== tables ===
+   text	   data	    bss	    dec	    hex	filename
+   2238	    688	      8	   2934	    b76	q3_segment
+
+===== Q4 =====
+=== EAT ===
+memory 100 ns, fault service 8000000 ns (8 ms)
+fault_rate  EAT_ns  slowdown_x
+1 in 1000     8099.90      81.00
+1 in 100000    180.00       1.80
+1 in 1000000   108.00       1.08
+page-fault rate for a 10% slowdown: 1 in 799990
+=== growth ===
+total_MB  pass1_ms  pass2_ms  minor_faults  major_faults
+     512     302.2       2.0        131073             0
+    1024     455.5       3.8        262143             0
+    1536     623.3       6.1        393215             0
+    2048     878.8       8.3        524287             0
+    2560     959.7      10.0        655359             0
+    3072    1223.2      12.4        786431             0
+    3584    1312.1      14.7        917503             0
+    4096    1448.4      18.1       1048575             0
+    4608    1959.8      35.1       1179647             0
+    5120    2161.7      45.2       1310719             0
+    5632    2449.3      84.3       1441791             0
+    6144    2497.4     100.3       1572863             0
+    6656    2633.0      28.0       1703935             0
+    7168    3081.3    1090.5       1901569         15306
+    7680    3263.0    6871.0       3602961        329202
+    8192    3576.3    7198.1       3893450        300839
+=== sequential vs random ===
+sequential first touch : 65538 minor, 5 major,    80.40 ms (1227 ns/page)
+sequential second pass : 0 minor, 5 major,     1.21 ms (  18 ns/page)
+random     first touch : 65536 minor, 5 major,    82.68 ms (1262 ns/page)
+random     second pass : 0 minor, 5 major,     1.39 ms (  21 ns/page)
+checksum 8355840
+=== copy-on-write ===
+parent before fork: RSS 513.8 MB, MemFree 6892 MB
+parent before fork: Rss 526232 kB, Shared_Clean 1156 kB, Private_Dirty 524388 kB
+child  after fork : RSS 512.9 MB (PTEs shared, pages read-only)
+child  after fork: Rss 525420 kB, Shared_Clean 1032 kB, Private_Dirty 32 kB
+child  after write: RSS 513.1 MB
+child  after write: Rss 525420 kB, Shared_Clean 1032 kB, Private_Dirty 524320 kB
+parent while child holds its copy: MemFree 6364 MB
+parent after child exit: MemFree 6876 MB
+=== free memory before/after ===
+               total        used        free      shared  buff/cache   available
+Mem:            7793         468        7386           3          43        7324
+Swap:           2048          83        1964
+
+===== Q5 =====
+=== completed LRU program ===
+3 frames: FIFO 15, LRU 12, Optimal 9
+4 frames: FIFO 10, LRU 8, Optimal 8
+Belady string, FIFO: 3 frames 9 faults, 4 frames 10 faults
+=== simulation ===
+string,frames,FIFO,LRU,Optimal,Clock
+locality,3,797,794,667,795
+locality,4,749,752,614,750
+locality,5,715,710,571,712
+locality,6,690,683,536,689
+locality,7,668,659,504,659
+locality,8,646,645,473,642
+locality,9,634,630,446,628
+locality,10,623,616,422,616
+random,3,928,928,783,927
+random,4,907,908,727,907
+random,5,878,882,678,877
+random,6,858,855,635,856
+random,7,841,843,600,843
+random,8,819,821,567,816
+random,9,803,800,539,798
+random,10,791,785,513,785
+
+timing (ms for 100000 references, 8 frames, median of 7 runs)
+FIFO         1.84  (faults 464289)
+LRU          3.36  (faults 461419)
+Optimal      3.76  (faults 324982)
+Clock        2.76  (faults 462301)
+
+===== Q6 =====
+=== RAID calculations ===
+six disks of 4 TB, AFR 2.0%, rebuild 24 h
+level     usable_TB  usable_%  survives
+RAID 0         24.0       100  none
+RAID 1         12.0        50  1 per mirror pair
+RAID 5         20.0        83  1 disk
+RAID 6         16.0        67  2 disks
+RAID 10        12.0        50  1 per mirror pair
+
+probability of losing the array during one rebuild
+RAID 1/10: 5.48e-05 (1 in 18250)
+RAID 5   : 2.74e-04 (1 in 3650)
+RAID 6   : 3.00e-08 (1 in 33306250)
+
+if the array rebuilds twice a year (10 rebuilds in 5 years), 5-year loss chance
+RAID 1/10: 0.0548%
+RAID 5   : 0.2736%
+RAID 6   : 0.000030%
+=== disk preparation experiment ===
+=== 1. low-level preparation: partition a 64 MB disk image ===
+
+Welcome to fdisk (util-linux 2.41.3).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table.
+Created a new DOS (MBR) disklabel with disk identifier 0x14879213.
+
+Command (m for help): Created a new DOS (MBR) disklabel with disk identifier 0xd73dbfe2.
+
+Command (m for help): Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): Partition number (1-4, default 1): First sector (2048-131071, default 2048): Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-131071, default 131071): 
+Created a new partition 1 of type 'Linux' and of size 32 MiB.
+
+Command (m for help): Partition type
+   p   primary (1 primary, 0 extended, 3 free)
+   e   extended (container for logical partitions)
+Select (default p): Partition number (2-4, default 2): First sector (67584-131071, default 67584): Last sector, +/-sectors or +/-size{K,M,G,T,P} (67584-131071, default 131071): 
+Created a new partition 2 of type 'Linux' and of size 31 MiB.
+
+Command (m for help): The partition table has been altered.
+
+--- resulting partition table ---
+Disk disk.img: 64 MiB, 67108864 bytes, 131072 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0xd73dbfe2
+
+Device     Boot Start    End Sectors Size Id Type
+disk.img1        2048  67583   65536  32M 83 Linux
+disk.img2       67584 131071   63488  31M 83 Linux
+=== 2. logical formatting: ext4 on a second 64 MB image ===
+Discarding device blocks:     0/16384           done                            
+Creating filesystem with 16384 4k blocks and 16384 inodes
+
+Allocating group tables: 0/1   done                            
+Writing inode tables: 0/1   done                            
+Creating journal (1024 blocks): done
+Writing superblocks and filesystem accounting information: 0/1   done
+
+--- superblock ---
+Filesystem volume name:   <none>
+Filesystem state:         clean
+Inode count:              16384
+Block count:              16384
+Block size:               4096
+--- consistency check ---
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+fs.img: 12/16384 files (8.3% non-contiguous), 2097/16384 blocks
+=== 3. bad-block scan (write test on a third image) ===
+From block 0 to 65000
+Checking for bad blocks (non-destructive read-write test)
+Testing with random pattern:   0.00% done, 0:00 elapsed. (0/0/0 errors)done                                                 
+Pass completed, 0 bad blocks found. (0/0/0 errors)
+=== lsblk ===
+NAME   SIZE TYPE FSTYPE MOUNTPOINT
+sda  722.9M disk ext4   
+sdb   97.4M disk ext4   /usr/src/linux-headers-6.18.58.1-microsoft-standard-WSL2
+sdc      2G disk swap   [SWAP]
+sdd      1T disk ext4   /mnt/wslg/distro
+=== /proc/partitions ===
+major minor  #blocks  name
+
+   1        0       4096 ram0
+   1        1       4096 ram1
+   1        2       4096 ram2
+   1        3       4096 ram3
+   1        4       4096 ram4
+   1        5       4096 ram5
+   1        6       4096 ram6
+   1        7       4096 ram7
+   1        8       4096 ram8
+   1        9       4096 ram9
+   1       10       4096 ram10
+   1       11       4096 ram11
+   1       12       4096 ram12
+   1       13       4096 ram13
+   1       14       4096 ram14
+   1       15       4096 ram15
+   8        0     740272 sda
+   8       16      99728 sdb
+   8       32    2097156 sdc
+   8       48 1073741824 sdd
+=== df ===
+Filesystem     Type     Size  Used Avail Use% Mounted on
+none           overlay  3.9G     0  3.9G   0% /usr/lib/modules/6.18.58.1-microsoft-standard-WSL2
+/dev/sdb       ext4      97M   97M     0 100% /usr/src/linux-headers-6.18.58.1-microsoft-standard-WSL2
+none           tmpfs    3.9G  4.0K  3.9G   1% /mnt/wsl
+drivers        9p       552G  147G  405G  27% /usr/lib/wsl/drivers
+/dev/sdd       ext4    1007G  2.1G  954G   1% /
+none           tmpfs    3.9G   32K  3.9G   1% /mnt/wslg
+none           overlay  3.9G     0  3.9G   0% /usr/lib/wsl/lib
+rootfs         rootfs   3.9G  3.4M  3.8G   1% /init
+none           tmpfs    3.9G  572K  3.9G   1% /run
+none           tmpfs    3.9G     0  3.9G   0% /run/lock
+none           tmpfs    3.9G     0  3.9G   0% /run/shm
+none           overlay  3.9G   80K  3.9G   1% /mnt/wslg/versions.txt
+none           overlay  3.9G   80K  3.9G   1% /mnt/wslg/doc
+C:\            9p       552G  147G  405G  27% /mnt/c
+D:\            9p       400G  5.1G  395G   2% /mnt/d
+none           tmpfs    1.0M     0  1.0M   0% /run/credentials/systemd-journald.service
+tmpfs          tmpfs    3.9G     0  3.9G   0% /tmp
+none           tmpfs    1.0M     0  1.0M   0% /run/credentials/systemd-resolved.service
+none           tmpfs    1.0M     0  1.0M   0% /run/credentials/getty@tty1.service
+tmpfs          tmpfs    780M   12K  780M   1% /run/user/1000
+=== swap ===
+NAME     TYPE      SIZE  USED PRIO
+/dev/sdc partition   2G 81.2M   -2
+Filename				Type		Size		Used		Priority
+/dev/sdc                                partition	2097152		83148		-2
+               total        used        free      shared  buff/cache   available
+Mem:           7.6Gi       550Mi       7.1Gi       3.4Mi       104Mi       7.1Gi
+Swap:          2.0Gi        81Mi       1.9Gi
+=== fdisk -l ===
+fdisk: cannot open /dev/ram0: Permission denied
+fdisk: cannot open /dev/ram1: Permission denied
+fdisk: cannot open /dev/ram2: Permission denied
+fdisk: cannot open /dev/ram3: Permission denied
+fdisk: cannot open /dev/ram4: Permission denied
+fdisk: cannot open /dev/ram5: Permission denied
+fdisk: cannot open /dev/ram6: Permission denied
+fdisk: cannot open /dev/ram7: Permission denied
+fdisk: cannot open /dev/ram8: Permission denied
+fdisk: cannot open /dev/ram9: Permission denied
+fdisk: cannot open /dev/ram10: Permission denied
+fdisk: cannot open /dev/ram11: Permission denied
+fdisk: cannot open /dev/ram12: Permission denied
+fdisk: cannot open /dev/ram13: Permission denied
+fdisk: cannot open /dev/ram14: Permission denied
+fdisk: cannot open /dev/ram15: Permission denied
+fdisk: cannot open /dev/sda: Permission denied
+fdisk: cannot open /dev/sdb: Permission denied
+fdisk: cannot open /dev/sdc: Permission denied
+fdisk: cannot open /dev/sdd: Permission denied
+=== write/read sample on the ext4 disk ===
+536870912 bytes (537 MB, 512 MiB) copied, 0.232014 s, 2.3 GB/s
+536870912 bytes (537 MB, 512 MiB) copied, 0.0790569 s, 6.8 GB/s
+=== mount of / ===
+/dev/sdd ext4 1006.9G  2.1G 953.6G
+
+===== Q7 =====
+=== unlocked, page cache evicted between rounds ===
+mode=unlocked buffer=32 MB rounds=5 iters=200000
+round 1: total 34.75 ms, mean 141.1 ns, p99.9 652 ns, max 85257 ns, minor 392, major 0
+          madvise(MADV_PAGEOUT) -> ok, waiting for writeback
+round 2: total 47.66 ms, mean 206.8 ns, p99.9 14414 ns, max 267546 ns, minor 6728, major 1464
+          madvise(MADV_PAGEOUT) -> ok, waiting for writeback
+round 3: total 59.57 ms, mean 262.5 ns, p99.9 16307 ns, max 197373 ns, minor 6728, major 1464
+          madvise(MADV_PAGEOUT) -> ok, waiting for writeback
+round 4: total 47.00 ms, mean 207.3 ns, p99.9 10739 ns, max 102490 ns, minor 6728, major 1464
+          madvise(MADV_PAGEOUT) -> ok, waiting for writeback
+round 5: total 29.49 ms, mean 120.5 ns, p99.9 9955 ns, max 85162 ns, minor 6728, major 1464
+=== locked ===
+mode=locked buffer=32 MB rounds=5 iters=200000
+round 1: total 30.71 ms, mean 125.9 ns, p99.9 647 ns, max 41086 ns, minor 1, major 0
+          madvise(MADV_PAGEOUT) on locked pages -> Invalid argument
+round 2: total 15.30 ms, mean 50.0 ns, p99.9 318 ns, max 175435 ns, minor 0, major 0
+round 3: total 30.79 ms, mean 126.0 ns, p99.9 552 ns, max 76844 ns, minor 0, major 0
+round 4: total 24.21 ms, mean 94.4 ns, p99.9 435 ns, max 67234 ns, minor 0, major 0
+round 5: total 12.48 ms, mean 36.7 ns, p99.9 252 ns, max 25401 ns, minor 0, major 0
+=== three-task simulation ===
+frames=1800 (1 MB), warm-up=5000, measured=20000 references
+task set: real-time 200 MB, ML 1536 MB, log 96 MB = 1832 MB, OS reservation 248 MB
+policy,pinned,rt_faults,ml_faults,log_faults,total
+LRU,0,38,374,0,412
+Clock,0,80,324,0,404
+LRU,1,0,414,0,414
+Clock,1,0,385,1,386
+=== memlock limit ===
+65536
+
+===== env =====
+Linux Falah 6.18.58.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Tue Oct 27 00:24:11 UTC 2026 x86_64 GNU/Linux
+
+PRETTY_NAME="Ubuntu 26.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="26.04"
+VERSION="26.04.1 LTS (Resolute Raccoon)"
+
+gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+page size: 4096 bytes
+cpus: 20
+
+               total        used        free      shared  buff/cache   available
+Mem:           7.6Gi       700Mi       6.5Gi       4.1Mi       584Mi       6.9Gi
+Swap:          2.0Gi          0B       2.0Gi
+
+NAME     TYPE      SIZE USED PRIO
+/dev/sdc partition   2G   0B   -2
+
+NAME   SIZE TYPE MOUNTPOINT
+sda  722.9M disk 
+sdb   97.4M disk /usr/src/linux-headers-6.18.58.1-microsoft-standard-WSL2
+sdc      2G disk [SWAP]
+sdd      1T disk /mnt/wslg/distro

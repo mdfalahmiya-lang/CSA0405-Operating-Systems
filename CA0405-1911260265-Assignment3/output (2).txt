@@ -1,0 +1,56 @@
+=== segment translation ===
+(0,     0) -> code base 4096 + 0 = physical 4096
+(0,  2047) -> code base 4096 + 2047 = physical 6143
+(0,  2048) -> segmentation fault: offset 2048 >= limit 2048 of code
+(1,   100) -> data base 16384 + 100 = physical 16484
+(1,  4095) -> data base 16384 + 4095 = physical 20479
+(2,   700) -> stack base 65536 + 700 = physical 66236
+(3,  6000) -> heap base 32768 + 6000 = physical 38768
+(3,  6144) -> segmentation fault: offset 6144 >= limit 6144 of heap
+=== segmentation fault ===
+about to write to a NULL pointer
+caught SIGSEGV: address (nil), code 1 (SEGV_MAPERR - no mapping)
+exit status 3
+=== fragmentation ===
+segment  size_KB  start_KB  result
+      1      281         0  loaded
+      2      333       281  loaded
+      3       95       614  loaded
+      4       80       709  loaded
+      5      363       789  loaded
+      6      516      1152  loaded
+      7      492      1668  loaded
+      8      345      2160  loaded
+      9      143      2505  loaded
+     10      181      2648  loaded
+     11       55      2829  loaded
+     12      369      2884  loaded
+     13      706      3253  loaded
+     14      544         -  no block
+     15      105      3959  loaded
+     16      620         -  no block
+     17       94         -  no block
+     18      546         -  no block
+     19      392         -  no block
+     20      452         -  no block
+after 20 loads         free      32 KB in  1 blocks, largest     32 KB, external fragmentation   0.0%
+after removing 10      free    2272 KB in  7 blocks, largest    843 KB, external fragmentation  62.9%
+900 KB request after removals: FAILS although total free is larger
+final state            free    2272 KB in  7 blocks, largest    843 KB, external fragmentation  62.9%
+=== maps ===
+pid 1557
+5664ee4dc000-5664ee4dd000 r--p 00000000 08:30 58557                      /home/mdfal/CSA0405-1911260265-Assignment3/Q3/q3_maps
+5664ee4dd000-5664ee4de000 r-xp 00001000 08:30 58557                      /home/mdfal/CSA0405-1911260265-Assignment3/Q3/q3_maps
+5664ee4de000-5664ee4df000 r--p 00002000 08:30 58557                      /home/mdfal/CSA0405-1911260265-Assignment3/Q3/q3_maps
+5664ee4df000-5664ee4e0000 r--p 00002000 08:30 58557                      /home/mdfal/CSA0405-1911260265-Assignment3/Q3/q3_maps
+5664ee4e0000-5664ee4e1000 rw-p 00003000 08:30 58557                      /home/mdfal/CSA0405-1911260265-Assignment3/Q3/q3_maps
+566500074000-566500095000 rw-p 00000000 00:00 0                          [heap]
+7ea727600000-7ea727628000 r--p 00000000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ea727628000-7ea7277c0000 r-xp 00028000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ea7277c0000-7ea72780e000 r--p 001c0000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ea72780e000-7ea727812000 r--p 0020e000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ea727812000-7ea727814000 rw-p 00212000 08:30 13613                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7ffe073e6000-7ffe07407000 rw-p 00000000 00:00 0                          [stack]
+=== tables ===
+   text	   data	    bss	    dec	    hex	filename
+   2238	    688	      8	   2934	    b76	q3_segment

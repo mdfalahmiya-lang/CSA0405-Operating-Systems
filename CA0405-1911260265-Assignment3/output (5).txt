@@ -1,0 +1,165 @@
+=== RAID calculations ===
+six disks of 4 TB, AFR 2.0%, rebuild 24 h
+level     usable_TB  usable_%  survives
+RAID 0         24.0       100  none
+RAID 1         12.0        50  1 per mirror pair
+RAID 5         20.0        83  1 disk
+RAID 6         16.0        67  2 disks
+RAID 10        12.0        50  1 per mirror pair
+
+probability of losing the array during one rebuild
+RAID 1/10: 5.48e-05 (1 in 18250)
+RAID 5   : 2.74e-04 (1 in 3650)
+RAID 6   : 3.00e-08 (1 in 33306250)
+
+if the array rebuilds twice a year (10 rebuilds in 5 years), 5-year loss chance
+RAID 1/10: 0.0548%
+RAID 5   : 0.2736%
+RAID 6   : 0.000030%
+=== disk preparation experiment ===
+=== 1. low-level preparation: partition a 64 MB disk image ===
+
+Welcome to fdisk (util-linux 2.41.3).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table.
+Created a new DOS (MBR) disklabel with disk identifier 0x14879213.
+
+Command (m for help): Created a new DOS (MBR) disklabel with disk identifier 0xd73dbfe2.
+
+Command (m for help): Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): Partition number (1-4, default 1): First sector (2048-131071, default 2048): Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-131071, default 131071): 
+Created a new partition 1 of type 'Linux' and of size 32 MiB.
+
+Command (m for help): Partition type
+   p   primary (1 primary, 0 extended, 3 free)
+   e   extended (container for logical partitions)
+Select (default p): Partition number (2-4, default 2): First sector (67584-131071, default 67584): Last sector, +/-sectors or +/-size{K,M,G,T,P} (67584-131071, default 131071): 
+Created a new partition 2 of type 'Linux' and of size 31 MiB.
+
+Command (m for help): The partition table has been altered.
+
+--- resulting partition table ---
+Disk disk.img: 64 MiB, 67108864 bytes, 131072 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0xd73dbfe2
+
+Device     Boot Start    End Sectors Size Id Type
+disk.img1        2048  67583   65536  32M 83 Linux
+disk.img2       67584 131071   63488  31M 83 Linux
+=== 2. logical formatting: ext4 on a second 64 MB image ===
+Discarding device blocks:     0/16384           done                            
+Creating filesystem with 16384 4k blocks and 16384 inodes
+
+Allocating group tables: 0/1   done                            
+Writing inode tables: 0/1   done                            
+Creating journal (1024 blocks): done
+Writing superblocks and filesystem accounting information: 0/1   done
+
+--- superblock ---
+Filesystem volume name:   <none>
+Filesystem state:         clean
+Inode count:              16384
+Block count:              16384
+Block size:               4096
+--- consistency check ---
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+fs.img: 12/16384 files (8.3% non-contiguous), 2097/16384 blocks
+=== 3. bad-block scan (write test on a third image) ===
+From block 0 to 65000
+Checking for bad blocks (non-destructive read-write test)
+Testing with random pattern:   0.00% done, 0:00 elapsed. (0/0/0 errors)done                                                 
+Pass completed, 0 bad blocks found. (0/0/0 errors)
+=== lsblk ===
+NAME   SIZE TYPE FSTYPE MOUNTPOINT
+sda  722.9M disk ext4   
+sdb   97.4M disk ext4   /usr/src/linux-headers-6.18.58.1-microsoft-standard-WSL2
+sdc      2G disk swap   [SWAP]
+sdd      1T disk ext4   /mnt/wslg/distro
+=== /proc/partitions ===
+major minor  #blocks  name
+
+   1        0       4096 ram0
+   1        1       4096 ram1
+   1        2       4096 ram2
+   1        3       4096 ram3
+   1        4       4096 ram4
+   1        5       4096 ram5
+   1        6       4096 ram6
+   1        7       4096 ram7
+   1        8       4096 ram8
+   1        9       4096 ram9
+   1       10       4096 ram10
+   1       11       4096 ram11
+   1       12       4096 ram12
+   1       13       4096 ram13
+   1       14       4096 ram14
+   1       15       4096 ram15
+   8        0     740272 sda
+   8       16      99728 sdb
+   8       32    2097156 sdc
+   8       48 1073741824 sdd
+=== df ===
+Filesystem     Type     Size  Used Avail Use% Mounted on
+none           overlay  3.9G     0  3.9G   0% /usr/lib/modules/6.18.58.1-microsoft-standard-WSL2
+/dev/sdb       ext4      97M   97M     0 100% /usr/src/linux-headers-6.18.58.1-microsoft-standard-WSL2
+none           tmpfs    3.9G  4.0K  3.9G   1% /mnt/wsl
+drivers        9p       552G  147G  405G  27% /usr/lib/wsl/drivers
+/dev/sdd       ext4    1007G  2.1G  954G   1% /
+none           tmpfs    3.9G   32K  3.9G   1% /mnt/wslg
+none           overlay  3.9G     0  3.9G   0% /usr/lib/wsl/lib
+rootfs         rootfs   3.9G  3.4M  3.8G   1% /init
+none           tmpfs    3.9G  572K  3.9G   1% /run
+none           tmpfs    3.9G     0  3.9G   0% /run/lock
+none           tmpfs    3.9G     0  3.9G   0% /run/shm
+none           overlay  3.9G   80K  3.9G   1% /mnt/wslg/versions.txt
+none           overlay  3.9G   80K  3.9G   1% /mnt/wslg/doc
+C:\            9p       552G  147G  405G  27% /mnt/c
+D:\            9p       400G  5.1G  395G   2% /mnt/d
+none           tmpfs    1.0M     0  1.0M   0% /run/credentials/systemd-journald.service
+tmpfs          tmpfs    3.9G     0  3.9G   0% /tmp
+none           tmpfs    1.0M     0  1.0M   0% /run/credentials/systemd-resolved.service
+none           tmpfs    1.0M     0  1.0M   0% /run/credentials/getty@tty1.service
+tmpfs          tmpfs    780M   12K  780M   1% /run/user/1000
+=== swap ===
+NAME     TYPE      SIZE  USED PRIO
+/dev/sdc partition   2G 81.2M   -2
+Filename				Type		Size		Used		Priority
+/dev/sdc                                partition	2097152		83148		-2
+               total        used        free      shared  buff/cache   available
+Mem:           7.6Gi       550Mi       7.1Gi       3.4Mi       104Mi       7.1Gi
+Swap:          2.0Gi        81Mi       1.9Gi
+=== fdisk -l ===
+fdisk: cannot open /dev/ram0: Permission denied
+fdisk: cannot open /dev/ram1: Permission denied
+fdisk: cannot open /dev/ram2: Permission denied
+fdisk: cannot open /dev/ram3: Permission denied
+fdisk: cannot open /dev/ram4: Permission denied
+fdisk: cannot open /dev/ram5: Permission denied
+fdisk: cannot open /dev/ram6: Permission denied
+fdisk: cannot open /dev/ram7: Permission denied
+fdisk: cannot open /dev/ram8: Permission denied
+fdisk: cannot open /dev/ram9: Permission denied
+fdisk: cannot open /dev/ram10: Permission denied
+fdisk: cannot open /dev/ram11: Permission denied
+fdisk: cannot open /dev/ram12: Permission denied
+fdisk: cannot open /dev/ram13: Permission denied
+fdisk: cannot open /dev/ram14: Permission denied
+fdisk: cannot open /dev/ram15: Permission denied
+fdisk: cannot open /dev/sda: Permission denied
+fdisk: cannot open /dev/sdb: Permission denied
+fdisk: cannot open /dev/sdc: Permission denied
+fdisk: cannot open /dev/sdd: Permission denied
+=== write/read sample on the ext4 disk ===
+536870912 bytes (537 MB, 512 MiB) copied, 0.232014 s, 2.3 GB/s
+536870912 bytes (537 MB, 512 MiB) copied, 0.0790569 s, 6.8 GB/s
+=== mount of / ===
+/dev/sdd ext4 1006.9G  2.1G 953.6G

@@ -1,0 +1,29 @@
+=== unlocked, page cache evicted between rounds ===
+mode=unlocked buffer=32 MB rounds=5 iters=200000
+round 1: total 34.75 ms, mean 141.1 ns, p99.9 652 ns, max 85257 ns, minor 392, major 0
+          madvise(MADV_PAGEOUT) -> ok, waiting for writeback
+round 2: total 47.66 ms, mean 206.8 ns, p99.9 14414 ns, max 267546 ns, minor 6728, major 1464
+          madvise(MADV_PAGEOUT) -> ok, waiting for writeback
+round 3: total 59.57 ms, mean 262.5 ns, p99.9 16307 ns, max 197373 ns, minor 6728, major 1464
+          madvise(MADV_PAGEOUT) -> ok, waiting for writeback
+round 4: total 47.00 ms, mean 207.3 ns, p99.9 10739 ns, max 102490 ns, minor 6728, major 1464
+          madvise(MADV_PAGEOUT) -> ok, waiting for writeback
+round 5: total 29.49 ms, mean 120.5 ns, p99.9 9955 ns, max 85162 ns, minor 6728, major 1464
+=== locked ===
+mode=locked buffer=32 MB rounds=5 iters=200000
+round 1: total 30.71 ms, mean 125.9 ns, p99.9 647 ns, max 41086 ns, minor 1, major 0
+          madvise(MADV_PAGEOUT) on locked pages -> Invalid argument
+round 2: total 15.30 ms, mean 50.0 ns, p99.9 318 ns, max 175435 ns, minor 0, major 0
+round 3: total 30.79 ms, mean 126.0 ns, p99.9 552 ns, max 76844 ns, minor 0, major 0
+round 4: total 24.21 ms, mean 94.4 ns, p99.9 435 ns, max 67234 ns, minor 0, major 0
+round 5: total 12.48 ms, mean 36.7 ns, p99.9 252 ns, max 25401 ns, minor 0, major 0
+=== three-task simulation ===
+frames=1800 (1 MB), warm-up=5000, measured=20000 references
+task set: real-time 200 MB, ML 1536 MB, log 96 MB = 1832 MB, OS reservation 248 MB
+policy,pinned,rt_faults,ml_faults,log_faults,total
+LRU,0,38,374,0,412
+Clock,0,80,324,0,404
+LRU,1,0,414,0,414
+Clock,1,0,385,1,386
+=== memlock limit ===
+65536
