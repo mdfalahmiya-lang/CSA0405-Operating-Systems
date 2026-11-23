@@ -1,0 +1,20 @@
+Task 5 model: 100 TB dataset, 0.04 file operations per user per second
+service rate 200 ops/s per server, HDD $20/TB-month, cloud $23/TB-month
+
+ Users Option         Load   Read latency  Write latency Storage TB    $/month Availability
+------------------------------------------------------------------------------------------
+   100 NFS           0.02x         5.1 ms         2.0 ms        100       2000        99.9%
+   100 HDFS x3       0.01x         5.0 ms         6.0 ms        300       6000       99.99%
+   100 Cloud         0.00x         5.0 ms        40.0 ms        100       2300      99.999%
+
+  1000 NFS           0.20x         6.2 ms         2.0 ms        100       2000        99.9%
+  1000 HDFS x3       0.07x         5.0 ms         6.0 ms        300       6000       99.99%
+  1000 Cloud         0.00x         5.0 ms        40.0 ms        100       2300      99.999%
+
+ 10000 NFS           2.00x      saturated      saturated        100       2000        99.9%
+ 10000 HDFS x3       0.67x         7.2 ms         6.0 ms        300       6000       99.99%
+ 10000 Cloud         0.04x         5.0 ms        40.0 ms        100       2300      99.999%
+
+Read latency = queueing delay + one service time (base network latency included in service).
+NFS becomes unstable above 5,000 users (400 ops/s > 200 ops/s); HDFS x3 above 15,000 users.
+Availability is the advertised class, not a measured value: 99.9% = 8.8 h/year, 99.99% = 52.6 min/year, 99.999% = 5.3 min/year downtime.

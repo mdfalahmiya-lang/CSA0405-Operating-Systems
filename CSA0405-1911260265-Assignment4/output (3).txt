@@ -1,0 +1,43 @@
+built q4_sstf and q4_sim
+=== Task 4: completed SSTF program (given queue) ===
+FCFS   53 98 183 37 122 14 124 65 67  -> 640 cylinders
+SSTF   53 65 67 37 14 98 122 124 183  -> 236 cylinders
+SCAN   53 37 14 0 65 67 98 122 124 183  -> 236 cylinders
+C-SCAN 53 ... 199, jump to 0 ... 37  -> 183 cylinders (+199 for the jump)
+
+=== Task 4: 10,000-request simulation, three loads ===
+Disk-scheduling simulation: 10000 requests per run, cylinders 0-199
+service = 2.0 ms + 0.10 ms/cylinder, initial head 53
+arrival rates: light 30, medium 90, heavy 150 requests/s
+
+=== Light load (30 requests/s) ===
+Alg     AvgMove  AvgWait      p50      p95      Max      Std     Jain Throughput     >1s
+FCFS      67.04     2.00     0.00    12.32    44.14     4.71   0.1530      29.90       0
+SSTF      65.88     1.75     0.00    10.93    42.14     4.17   0.1493      29.90       0
+SCAN     121.67     8.26     5.30    27.22    60.93     9.19   0.4465      29.90       0
+C-SCAN   168.27    22.36    23.00    56.99    82.07    17.66   0.6160      29.89       0
+LOOK      65.93     1.76     0.00    11.00    42.14     4.18   0.1512      29.90       0
+C-LOOK    66.69     5.28     2.70    18.10    56.66     6.65   0.3869      29.90       0
+       band spread (max-min avg wait, ms): FCFS=0.8  SSTF=0.9  SCAN=1.6  C-SCAN=27.2  LOOK=0.9  C-LOOK=10.1
+
+=== Medium load (90 requests/s) ===
+Alg     AvgMove  AvgWait      p50      p95      Max      Std     Jain Throughput     >1s
+FCFS      66.77    19.06    11.64    65.82   134.08    22.45   0.4188      89.14       0
+SSTF      56.54     6.79     3.75    24.75    77.77     8.75   0.3761      89.15       0
+SCAN      76.52    16.33    13.70    41.02    67.74    12.79   0.6196      89.13       0
+C-SCAN    84.85    29.70    28.51    63.09    96.66    18.36   0.7235      89.13       0
+LOOK      56.89     7.02     4.11    24.62    51.04     8.49   0.4059      89.14       0
+C-LOOK    59.67    12.38     9.22    36.01    65.82    11.85   0.5221      89.14       0
+       band spread (max-min avg wait, ms): FCFS=4.7  SSTF=4.0  SCAN=6.8  C-SCAN=22.5  LOOK=2.9  C-LOOK=11.8
+
+=== Heavy load (150 requests/s) ===
+Alg     AvgMove  AvgWait      p50      p95      Max      Std     Jain Throughput     >1s
+FCFS      65.91  9570.63  9509.68 18460.86 19469.47  5452.02   0.7550     116.39    9518
+SSTF      40.75    13.25     8.93    41.03   111.97    13.73   0.4820     150.47       0
+SCAN      44.72    20.94    17.97    49.88    86.61    15.27   0.6528     150.43       0
+C-SCAN    45.86    32.83    31.80    67.50   113.86    19.84   0.7325     150.44       0
+LOOK      40.91    13.85    10.70    38.06    87.51    12.26   0.5606     150.45       0
+C-LOOK    42.44    21.45    19.11    49.75    79.61    15.47   0.6578     150.45       0
+       band spread (max-min avg wait, ms): FCFS=906.0  SSTF=12.0  SCAN=10.3  C-SCAN=19.1  LOOK=7.9  C-LOOK=11.9
+
+CSV written to q4_sim.csv

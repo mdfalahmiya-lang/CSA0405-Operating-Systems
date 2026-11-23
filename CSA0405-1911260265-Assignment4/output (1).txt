@@ -1,0 +1,18 @@
+built q2_alloc and q2_fit_probe
+=== Task 2: completed first-fit contiguous allocation ===
+AAAAAA........CCCCC.............
+E (10 blocks) contiguous: start 19
+E (10 blocks) indexed: index block 6, data blocks 7 8 9 10 11 12 13 29 30 31
+AAAAAAeEEEEEEECCCCCEEEEEEEEEEEEE
+
+=== Task 2 probe: 21 free blocks, but the largest run is 13 ===
+State after A(6) B(8) C(5) D(7), release B and D
+AAAAAA........CCCCC.............
+free blocks: 21   largest contiguous run: 13
+
+E(10) contiguous: start 19
+AAAAAA........CCCCCEEEEEEEEEE...
+
+E(14) contiguous: start -1
+E(14) indexed: index block 6, data blocks 7 8 9 10 11 12 13 19 20 21 22 23 24 25
+AAAAAAeEEEEEEECCCCCEEEEEEE......

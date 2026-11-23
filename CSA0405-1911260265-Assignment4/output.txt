@@ -1,0 +1,41 @@
+Proposed design: one flat directory, 12,000 students, student-chosen names
+  entries at the root        : 12,000 students x ~4 files = 48,000
+  name clashes               : birthday problem over common names
+  protection                 : none (any student can read or delete any file)
+  growth                     : contiguous, so a file cannot extend past a neighbour
+
+Improved design: tree rooted at /students/<year>/<department>/<register>/
+-rw------- mdfal:mdfal      9 students/2026/CSE/1911260265/backup/2026-11-22.tar
+-rw------- mdfal:mdfal     11 students/2026/CSE/1911260265/documents/report.docx
+-rw------- mdfal:mdfal     15 students/2026/CSE/1911260265/documents/notes.txt
+-rw-rw---- mdfal:mdfal     14 students/2026/CSE/1911260265/projects/shared/design.md
+drwx------ mdfal:mdfal     60 students
+drwx------ mdfal:mdfal     60 students/2026
+drwx------ mdfal:mdfal     60 students/2026/CSE
+drwx------ mdfal:mdfal     60 students/2026/CSE/1911260265/backup
+drwx------ mdfal:mdfal     80 students/2026/CSE/1911260265/documents
+drwx------ mdfal:mdfal    100 students/2026/CSE/1911260265
+drwxr-xr-x mdfal:mdfal     60 
+drwxrws--- mdfal:mdfal     60 students/2026/CSE/1911260265/projects
+drwxrws--- mdfal:mdfal     60 students/2026/CSE/1911260265/projects/shared
+
+Path walk for the shared project file (permission of every component):
+f: /tmp/q1_demo/students/2026/CSE/1911260265/projects/shared/design.md
+drwxr-xr-x root  root  /
+drwxrwxrwt root  root  tmp
+drwxr-xr-x mdfal mdfal q1_demo
+drwx------ mdfal mdfal students
+drwx------ mdfal mdfal 2026
+drwx------ mdfal mdfal CSE
+drwx------ mdfal mdfal 1911260265
+drwxrws--- mdfal mdfal projects
+drwxrws--- mdfal mdfal shared
+-rw-rw---- mdfal mdfal design.md
+
+Entries per directory (the root has 1 entry per year, not 48,000):
+     1  students
+     1  students/2026
+     1  students/2026/CSE
+     3  students/2026/CSE/1911260265
+     1  students/2026/CSE/1911260265/projects
+     1  students/2026/CSE/1911260265/projects/shared

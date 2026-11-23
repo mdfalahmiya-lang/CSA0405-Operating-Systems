@@ -1,0 +1,59 @@
+== kernel and mount ==
+Linux 6.18.58.1-microsoft-standard-WSL2 x86_64
+/dev/sdd / ext4 rw,relatime,discard,errors=remount-ro,data=ordered
+
+== df -h / (space) ==
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G  2.2G  954G   1% /
+
+== df -i / (inodes) ==
+Filesystem       Inodes IUsed    IFree IUse% Mounted on
+/dev/sdd       67108864 59264 67049600    1% /
+
+== stat -f / (block and inode counts) ==
+block size=4096  fundamental block=4096  blocks=263940717  free=263389749  avail=249963881  inodes=67108864  free inodes=67049600
+
+== inode numbers of three files (ls -li) ==
+  751 -rw-r--r-- 1 root root  407 Nov 22 18:39 /etc/hosts
+44868 -rw-r--r-- 1 root root 1378 Nov  7 11:44 /etc/passwd
+45531 lrwxrwxrwx 1 root root    6 Feb 23  2026 /usr/bin/gcc -> gcc-15
+
+== stat /etc/passwd ==
+  File: /etc/passwd
+  size: 1378      	Blocks: 8          IO Block: 4096   regular file
+Device: 8,48	Inode: 44868       Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2026-11-22 17:56:56.221261183 +0000
+Modify: 2026-11-07 11:44:51.012634752 +0000
+Change: 2026-11-07 11:44:51.012680051 +0000
+ Birth: 2026-11-07 11:44:51.009373379 +0000
+== tune2fs -l /dev/sdd ==
+Filesystem volume name:   <none>
+Filesystem features:      has_journal ext_attr resize_inode dir_index orphan_file filetype needs_recovery extent 64bit flex_bg metadata_csum_seed sparse_super large_file huge_file dir_nlink extra_isize metadata_csum orphan_present
+Filesystem state:         clean
+Inode count:              67108864
+Block count:              268435456
+Reserved block count:     13421772
+Free blocks:              263389733
+Free inodes:              67049602
+Block size:               4096
+Mount count:              166
+Journal inode:            8
+Journal backup:           inode blocks
+
+== dumpe2fs -h /dev/sdd ==
+Filesystem features:      has_journal ext_attr resize_inode dir_index orphan_file filetype needs_recovery extent 64bit flex_bg metadata_csum_seed sparse_super large_file huge_file dir_nlink extra_isize metadata_csum orphan_present
+Default mount options:    user_xattr acl
+Inode count:              67108864
+Block count:              268435456
+Free blocks:              263389733
+Free inodes:              67049602
+Block size:               4096
+Journal inode:            8
+
+== ext4 error counters ==
+errors_count = 0
+warning_count = 0
+
+== block-device I/O scheduler for sdd ==
+/sys/block/sdd/queue/scheduler: [none] mq-deadline kyber 

@@ -1,0 +1,18 @@
+built q6_stream
+Task 6 workload: 5000 videos, 240000 views/week, Zipf alpha 0.8, average video 1.0 GB
+
+Design A - local servers: 1 TB SSD cache + 12 TB HDD, 3 replicas
+  cache hit              : 161595 / 240000 = 67.33 %
+  origin reads           : 78405 per week
+  start-up latency (ms)  : avg 37.29  p50 32.10  p95 48.00  p99 48.00  max 48.00
+  egress                 : 1039.9 TB/month (origin 339.7 TB)
+  monthly cost           : $8200 (fixed $2700 + storage $300 + egress $5200 + origin $0 + requests $0)
+
+Design B - cloud object storage + CDN edge cache
+  cache hit              : 225954 / 240000 = 94.15 %
+  origin reads           : 14046 per week
+  start-up latency (ms)  : avg 34.10  p50 30.00  p95 100.00  p99 100.00  max 100.00
+  egress                 : 1039.9 TB/month (origin 60.9 TB)
+  monthly cost           : $26391 (fixed $0 + storage $115 + egress $20798 + origin $5478 + requests $0)
+
+CSV written to q6_stream.csv

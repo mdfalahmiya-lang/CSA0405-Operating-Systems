@@ -1,0 +1,10 @@
+# Build products and generated files
+Q1/q1_tree
+Q2/q2_alloc
+Q2/q2_fit_probe
+Q4/q4_sstf
+Q4/q4_sim
+Q6/q6_stream
+*.o
+*.out
+core
