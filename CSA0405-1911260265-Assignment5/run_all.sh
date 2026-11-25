@@ -3,8 +3,8 @@
 # Run as root (sudo ./run_all.sh) so that B1 can install the service and read logs.
 set -u
 cd "$(dirname "$0")"
-: > ALL_RESULTS.txt
-exec > >(tee -a ALL_RESULTS.txt) 2>&1
+: > run_all_output.txt
+exec > >(tee -a run_all_output.txt) 2>&1
 
 echo "===== environment ====="
 {

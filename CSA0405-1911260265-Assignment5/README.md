@@ -50,6 +50,7 @@ The completed "Complete the Code" items are:
 | QEMU / KVM | 10.2.1, `/dev/kvm` available (nested) |
 | Kubernetes | kind v0.30.0, cluster v1.34.0, kubectl v1.37.2 |
 | ApacheBench | 2.3 |
+| Compiler | No C programs; the application is Python 3.12. gcc 15.2.0 is present on the host for reference. |
 
 ## Reproduce
 

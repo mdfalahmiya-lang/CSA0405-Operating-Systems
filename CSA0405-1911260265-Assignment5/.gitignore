@@ -16,3 +16,4 @@ B3/vm/id_ed25519.pub
 
 # Local logs and temporary output
 *.log
+run_all_output.txt
