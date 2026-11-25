@@ -1,0 +1,18 @@
+# Python and generated files
+__pycache__/
+*.pyc
+*.pyo
+
+# B3 virtual machine (the base image is downloaded, not committed)
+B3/vm/*.img
+B3/vm/*.qcow2
+B3/vm/seed.iso
+B3/vm/seed.img
+B3/vm/user-data
+B3/vm/console.log
+B3/vm/qemu.pid
+B3/vm/id_ed25519
+B3/vm/id_ed25519.pub
+
+# Local logs and temporary output
+*.log
