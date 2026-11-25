@@ -82,3 +82,23 @@ Name=b2_pgdata Driver=local Mountpoint=/var/lib/docker/volumes/b2_pgdata/_data
 ===== image build timings, --no-cache =====
 slim_build_s=27
 full_build_s=44
+
+===== load test: 20,000 requests, 50 connections =====
+$ docker inspect b2-portal-1 --format 'NanoCpus={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}}'
+NanoCpus=500000000 Memory=268435456
+$ docker exec b2-portal-1 whoami
+portal
+$ ab -n 20000 -c 50 http://127.0.0.1:8000/ping &
+$ docker stats --no-stream   (during the run)
+NAME          CPU %     MEM USAGE / LIMIT   MEM %     NET I/O           BLOCK I/O         PIDS
+b2-portal-1   49.64%    72.38MiB / 256MiB   28.27%    1.29MB / 1.46MB   123kB / 0B        12
+b2-db-1       0.02%     36.14MiB / 512MiB   7.06%     1.34kB / 126B     36.9MB / 246kB    6
+$ grep summary /tmp/ab5f.txt
+Complete requests:      20000
+Failed requests:        0
+Requests per second:    254.96 [#/sec] (mean)
+Time per request:       196.108 [ms] (mean)
+Time per request:       3.922 [ms] (mean, across all concurrent requests)
+  50%    198
+  95%    393
+  99%    489

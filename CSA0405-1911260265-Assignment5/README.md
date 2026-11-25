@@ -27,7 +27,7 @@ every number quoted in the report.
 | `A4` | Containerisation | `notes.md`: eight namespaces, cgroup v2 controls, image layers, VM comparison |
 | `A5` | Cloud and orchestration | `notes.md`: IaaS/PaaS/SaaS, topology, Kubernetes objects, HPA, fixed-VM comparison |
 | `B1` | Administer the Linux server | `install.sh`, `portal/`, `systemd/`, `nginx/`, `scripts/log_summary.sh`, `scripts/nginx_log_report.sh`, `scripts/disk_alert.sh`, `cron/`, `output.txt` |
-| `B2` | Containerise the portal | `Dockerfile` (TODOs 1–3), `Dockerfile.full`, `app.py`, `compose.yaml`, `init.sql`, `build.sh`, `run.sh`, `collect.sh`, `output.txt` |
+| `B2` | Containerise the portal | `Dockerfile` (TODOs 1–3), `Dockerfile.full`, `app.py`, `compose.yaml`, `init.sql`, `build.sh`, `run.sh`, `collect.sh`, `load_test.sh`, `output.txt` |
 | `B3` | Bare metal vs VM vs container | `k8s/deployment.yaml` (TODOs 1–2), `measure_bare.sh`, `measure_container.sh`, `vm/run_vm.sh`, `vm/vm_rebench.sh`, `k8s_test.sh`, `output.txt`, `measurements.csv` |
 | `B4` | Final engineering decision | `k8s/postgres.yaml`, `test_b4.sh`, `model.py`, `output.txt`, `capacity.csv`, `cost.csv` |
 | root | Build and evidence | `README.md`, `run_all.sh`, `ALL_RESULTS.txt`, `.gitignore`, `screenshots/` |
@@ -65,6 +65,7 @@ crontab -l
 # B2 – images, container and Compose stack
 cd B2 && ./build.sh && ./run.sh && cd ..
 cd B2 && docker compose up -d --build && cd ..
+cd B2 && ./load_test.sh && cd ..           # 20,000 requests at 50 connections
 docker stats --no-stream
 docker history --no-trunc result-portal:1.0
 
