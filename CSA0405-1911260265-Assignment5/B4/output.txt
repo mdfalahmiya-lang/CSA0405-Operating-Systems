@@ -1,0 +1,100 @@
+===== apply the database manifest =====
+configmap/results-init unchanged
+persistentvolumeclaim/postgres-data unchanged
+deployment.apps/postgres unchanged
+service/postgres unchanged
+deployment "postgres" successfully rolled out
+
+===== both services and their pods =====
+NAME            READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                     SELECTOR
+result-portal   3/3     3            3           4m26s   portal       simats/result-portal:1.0   app=result-portal
+postgres        1/1     1            1           77s     postgres     postgres:16-alpine         app=postgres
+NAME                             READY   STATUS    RESTARTS   AGE     IP            NODE               NOMINATED NODE   READINESS GATES
+postgres-6f57496ff6-79nww        1/1     Running   0          77s     10.244.0.15   a5-control-plane   <none>           <none>
+result-portal-6865f97598-4pxj8   1/1     Running   0          4m26s   10.244.0.5    a5-control-plane   <none>           <none>
+result-portal-6865f97598-jrws8   1/1     Running   0          4m26s   10.244.0.6    a5-control-plane   <none>           <none>
+result-portal-6865f97598-k2prl   1/1     Running   0          2m5s    10.244.0.12   a5-control-plane   <none>           <none>
+NAME            STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+postgres-data   Bound    pvc-15e84dac-7615-4640-b46a-1e9f44e61d49   1Gi        RWO            standard       <unset>                 77s
+
+===== requests and limits of the database pod =====
+    Limits:
+      cpu:     500m
+      memory:  512Mi
+    Requests:
+      cpu:     100m
+      memory:  128Mi
+    Environment:
+      POSTGRES_DB:        results
+      POSTGRES_USER:      portal
+      POSTGRES_PASSWORD:  portal
+    Mounts:
+    Mounts:
+      /docker-entrypoint-initdb.d from init (rw)
+      /var/lib/postgresql/data from data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-mldp9 (ro)
+Conditions:
+
+===== database memory against its 512Mi limit =====
+memory.current=68296704
+memory.max=536870912
+
+===== rows in the database =====
+  register  |        name         | semester | gpa  | status 
+------------+---------------------+----------+------+--------
+ 1911260001 | A. Student          |        5 | 7.81 | PASS
+ 1911260002 | B. Student          |        5 | 5.96 | REVIEW
+ 1911260265 | Mohammed Falah Miya |        5 | 8.42 | PASS
+(3 rows)
+
+
+===== point the portal at the database and roll it out =====
+deployment.apps/result-portal env updated
+Waiting for deployment "result-portal" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "result-portal" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "result-portal" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "result-portal" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "result-portal" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "result-portal" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "result-portal" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "result-portal" rollout to finish: 1 old replicas are pending termination...
+deployment "result-portal" successfully rolled out
+NAME                             READY   STATUS        RESTARTS   AGE     IP            NODE               NOMINATED NODE   READINESS GATES
+result-portal-56d5c94df7-9gxlp   1/1     Running       0          18s     10.244.0.16   a5-control-plane   <none>           <none>
+result-portal-56d5c94df7-bn2v2   1/1     Running       0          3s      10.244.0.18   a5-control-plane   <none>           <none>
+result-portal-56d5c94df7-dzwtp   1/1     Running       0          6s      10.244.0.17   a5-control-plane   <none>           <none>
+result-portal-6865f97598-jrws8   1/1     Terminating   0          4m46s   10.244.0.6    a5-control-plane   <none>           <none>
+
+===== end-to-end read through the portal Service =====
+{"gpa":8.42,"host":"result-portal-56d5c94df7-9gxlp","name":"Mohammed Falah Miya","register":"1911260265","semester":5,"source":"postgres","status":"PASS"}
+
+{"host":"result-portal-56d5c94df7-9gxlp","pid":12,"status":"ok","time":"2026-11-24T17:54:21.304862+00:00","uptime_s":18.8}
+
+
+===== restart the database pod (PVC persistence) =====
+pod "postgres-6f57496ff6-79nww" deleted from default namespace
+deployment "postgres" successfully rolled out
+ rows_after_restart 
+--------------------
+                  3
+(1 row)
+
+
+===== final state =====
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/postgres        1/1     1            1           103s
+deployment.apps/result-portal   3/3     3            3           4m52s
+
+NAME                                 READY   STATUS    RESTARTS   AGE
+pod/postgres-6f57496ff6-7fhtv        1/1     Running   0          2s
+pod/result-portal-56d5c94df7-9gxlp   1/1     Running   0          24s
+pod/result-portal-56d5c94df7-bn2v2   1/1     Running   0          9s
+pod/result-portal-56d5c94df7-dzwtp   1/1     Running   0          12s
+
+NAME                                  STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/postgres-data   Bound    pvc-15e84dac-7615-4640-b46a-1e9f44e61d49   1Gi        RWO            standard       <unset>                 103s
+
+NAME                    TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes      ClusterIP      10.96.0.1      <none>        443/TCP        5m21s
+service/postgres        ClusterIP      10.96.72.198   <none>        5432/TCP       103s
+service/result-portal   LoadBalancer   10.96.40.183   <pending>     80:30561/TCP   4m52s

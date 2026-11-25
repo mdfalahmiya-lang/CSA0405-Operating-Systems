@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: results-init
+data:
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS results (
+        register   CHAR(10) PRIMARY KEY,
+        name       TEXT        NOT NULL,
+        semester   SMALLINT    NOT NULL,
+        gpa        NUMERIC(3,2) NOT NULL,
+        status     TEXT        NOT NULL
+    );
+    INSERT INTO results (register, name, semester, gpa, status) VALUES
+        ('1911260265', 'Mohammed Falah Miya', 5, 8.42, 'PASS'),
+        ('1911260001', 'A. Student',          5, 7.81, 'PASS'),
+        ('1911260002', 'B. Student',          5, 5.96, 'REVIEW')
+    ON CONFLICT (register) DO NOTHING;
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: results
+            - name: POSTGRES_USER
+              value: portal
+            - name: POSTGRES_PASSWORD
+              value: portal
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+            - name: init
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: postgres-data
+        - name: init
+          configMap:
+            name: results-init
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432

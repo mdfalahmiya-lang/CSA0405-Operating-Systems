@@ -1,0 +1,7 @@
+option,annual_usd,notes
+own_vms_new_server,1600,server amortised over 5 years (1200) + power (400)
+own_containers_existing_server,400,power only; no capital cost
+own_kubernetes_ha,2800,power 400 + two more servers amortised (2 x 1200)
+public_cloud_autoscaled,6837,3 baseline nodes + 2 managed DB instances + ALB + 100 GB + 20 burst days
+public_cloud_fixed_six,11607,6 nodes all year + 2 managed DB instances + ALB + 100 GB
+hybrid,1030,campus power 400 + two 10-day six-node bursts 553 + LB/storage 77
