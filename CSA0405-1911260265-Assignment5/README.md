@@ -49,7 +49,7 @@ The completed "Complete the Code" items are:
 | PostgreSQL | 16 (container and Kubernetes) |
 | QEMU / KVM | 10.2.1, `/dev/kvm` available (nested) |
 | Kubernetes | kind v0.30.0, cluster v1.34.0, kubectl v1.37.2 |
-| ApacheBench | 2.4.66 |
+| ApacheBench | 2.3 |
 
 ## Reproduce
 

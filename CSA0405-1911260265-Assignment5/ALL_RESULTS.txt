@@ -4,7 +4,7 @@ Complete console transcript of the final run
 
 Host      : Ubuntu 26.04.1 LTS (WSL2), kernel 6.18.58.1, 20 vCPUs, 7.6 GiB RAM
 Tooling   : Docker 29.1.3, Compose 2.40.3, Nginx 1.28.3, QEMU 10.2.1,
-            kind v0.30.0, kubectl v1.37.2, ApacheBench 2.4.66
+            kind v0.30.0, kubectl v1.37.2, ApacheBench 2.3
 Generated : 25/11/2026
 
 The four sections below are the saved outputs of the final run. The same files
