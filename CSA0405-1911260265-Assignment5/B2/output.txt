@@ -1,0 +1,80 @@
+===== images =====
+REPOSITORY      TAG         IMAGE ID       SIZE
+b2-portal       latest      ca75b2089bf9   207MB
+result-portal   1.0         87e49c33b0e8   207MB
+result-portal   full        437884b95811   1.65GB
+
+===== image size in bytes =====
+result-portal:1.0      50641430 bytes
+result-portal:full     422862702 bytes
+
+===== docker history: optimised image =====
+CREATED BY                                      SIZE
+/bin/sh -c #(nop)  CMD ["gunicorn" "--bind" …   0B
+/bin/sh -c #(nop)  EXPOSE 8000                  0B
+/bin/sh -c #(nop)  USER portal                  0B
+/bin/sh -c useradd --create-home --uid 10001…   86kB
+/bin/sh -c #(nop) COPY multi:b743f61593fa29e…   16.4kB
+/bin/sh -c pip install --no-cache-dir -r req…   22.3MB
+/bin/sh -c #(nop) COPY file:d8faf7710641494a…   12.3kB
+/bin/sh -c #(nop) WORKDIR /app                  8.19kB
+/bin/sh -c #(nop)  ENV PYTHONDONTWRITEBYTECO…   0B
+CMD ["python3"]                                 0B
+RUN /bin/sh -c set -eux;  for src in idle3 p…   16.4kB
+
+===== docker history: full python:3.12 baseline =====
+CREATED BY                                      SIZE
+/bin/sh -c #(nop)  CMD ["gunicorn" "--bind" …   0B
+/bin/sh -c #(nop)  EXPOSE 8000                  0B
+/bin/sh -c #(nop) COPY multi:b0a0db5d5e9f234…   16.4kB
+/bin/sh -c pip install --no-cache-dir -r req…   32MB
+/bin/sh -c #(nop) COPY file:d8faf7710641494a…   12.3kB
+/bin/sh -c #(nop) WORKDIR /app                  8.19kB
+CMD ["python3"]                                 0B
+RUN /bin/sh -c set -eux;  for src in idle3 p…   16.4kB
+RUN /bin/sh -c set -eux;   wget -O python.ta…   72.9MB
+ENV PYTHON_SHA256=b5796915dc45ff745cfb4e990a…   0B
+ENV PYTHON_VERSION=3.12.16                      0B
+
+===== packages installed in each image =====
+slim  : 87
+full  : 469
+
+===== compose services and limits =====
+NAME          IMAGE                COMMAND                  SERVICE   CREATED              STATUS                        PORTS
+b2-db-1       postgres:16-alpine   "docker-entrypoint.s…"   db        About a minute ago   Up About a minute (healthy)   5432/tcp
+b2-portal-1   b2-portal            "gunicorn --bind 0.0…"   portal    About a minute ago   Up About a minute (healthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+      cpus: 0.5
+      image: postgres:16-alpine
+      mem_limit: "536870912"
+          source: pgdata
+          target: /var/lib/postgresql/data
+          source: /home/mdfal/CSA0405-1911260265-Assignment5/B2/init.sql
+          target: /docker-entrypoint-initdb.d/init.sql
+      cpus: 0.5
+          condition: service_healthy
+      mem_limit: "268435456"
+          target: 8000
+
+===== docker stats =====
+NAME          CPU %     MEM USAGE / LIMIT   MEM %
+b2-portal-1   0.04%     65.21MiB / 256MiB   25.47%
+b2-db-1       0.02%     39.39MiB / 512MiB   7.69%
+
+===== database volume =====
+b2_pgdata
+Name=b2_pgdata Driver=local Mountpoint=/var/lib/docker/volumes/b2_pgdata/_data
+
+===== persistence across a database restart =====
+-- rows before restart --
+3
+ Container b2-db-1  Restarting
+ Container b2-db-1  Started
+-- rows after restart --
+3
+
+===== api through compose =====
+{"gpa":8.42,"host":"da4d7da43264","name":"Mohammed Falah Miya","register":"1911260265","semester":5,"source":"postgres","status":"PASS"}
+
+{"gpa":5.96,"host":"da4d7da43264","name":"B. Student","register":"1911260002","semester":5,"source":"postgres","status":"REVIEW"}
+

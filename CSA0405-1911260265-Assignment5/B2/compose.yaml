@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: results
+      POSTGRES_USER: portal
+      POSTGRES_PASSWORD: portal
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portal -d results"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    cpus: 0.50
+    mem_limit: 512m
+    restart: unless-stopped
+
+  portal:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://portal:portal@db:5432/results
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    cpus: 0.50
+    mem_limit: 256m
+    restart: unless-stopped
+
+volumes:
+  pgdata:
