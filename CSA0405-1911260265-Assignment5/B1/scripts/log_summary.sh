@@ -17,12 +17,12 @@ LOG
 echo "Requests per status code:"
 # TODO 1: Print each status code (field 7) with its count, sorted by code.
 awk '{print $7}' "$log" | sort | uniq -c \
-    | awk '{printf "  %s %s\n", $2, $1}'
+    | awk '{printf " %s %s\n", $2, $1}'
 
 echo "Busiest client:"
 # TODO 2: Print the IP address (field 1) with the most requests and its count.
 awk '{print $1}' "$log" | sort | uniq -c | sort -nr | head -1 \
-    | awk '{printf "  %s %s\n", $2, $1}'
+    | awk '{printf " %s %s\n", $2, $1}'
 
 echo "Total bytes sent: $(awk '{s += $8} END {print s}' "$log")"
 rm -f "$log"

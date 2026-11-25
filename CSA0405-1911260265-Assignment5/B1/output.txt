@@ -132,12 +132,12 @@ tcp   LISTEN 0      511              [::]:80            [::]:*    users:(("nginx
 
 ===== B1.2 completed log-summary program =====
 Requests per status code:
-  200 4
-  302 1
-  403 1
-  404 1
+ 200 4
+ 302 1
+ 403 1
+ 404 1
 Busiest client:
-  10.0.0.5 4
+ 10.0.0.5 4
 Total bytes sent: 43200
 
 ===== B1.2 live Nginx log report =====
@@ -230,3 +230,7 @@ awk_pipeline_ms=479
 $ awk '{print $1}' big.log | sort | uniq -c | sort -k1,1nr | head -1
 busiest_pipeline_ms=433
  571428 10.0.0.5
+
+===== B1.2 comparison with the expected output =====
+$ diff -u B1/expected_output.txt <(B1/scripts/log_summary.sh) && echo MATCHES EXPECTED OUTPUT
+MATCHES EXPECTED OUTPUT
