@@ -1,0 +1,4 @@
+label,requests,concurrency,requests_per_second,mean_ms,p95_ms,failed,startup_ms,memory_mb,disk_mb
+bare,5000,50,2797.98,17.870,19,0,314,96.9,46
+container,5000,50,295.29,169.323,303,0,2925,59.22,207
+vm,5000,50,1568.97,31.868,14,0,26602,361,2300

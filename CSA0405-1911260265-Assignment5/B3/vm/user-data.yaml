@@ -1,0 +1,38 @@
+#cloud-config
+hostname: portal-vm
+manage_etc_hosts: true
+
+users:
+  - name: portal
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - __SSH_PUBKEY__
+
+package_update: true
+packages:
+  - python3-venv
+  - python3-pip
+  - curl
+
+write_files:
+  - path: /home/portal/fetch.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      set -euo pipefail
+      cd /home/portal
+      for i in $(seq 1 30); do
+          if python3 -c "import urllib.request; urllib.request.urlretrieve('http://10.0.2.2:9000/B1/portal/app.py','app.py')"; then
+              break
+          fi
+          sleep 2
+      done
+      python3 -c "import urllib.request; urllib.request.urlretrieve('http://10.0.2.2:9000/B1/portal/requirements.txt','requirements.txt')"
+      python3 -m venv venv
+      venv/bin/pip install -q -r requirements.txt
+      chown -R portal:portal /home/portal
+
+runcmd:
+  - [bash, /home/portal/fetch.sh]
+  - [bash, -lc, "runuser -u portal -- bash -c 'cd /home/portal && nohup venv/bin/gunicorn -b 0.0.0.0:8000 -w 2 --threads 4 app:app >portal.log 2>&1 &'"]
