@@ -78,3 +78,7 @@ Name=b2_pgdata Driver=local Mountpoint=/var/lib/docker/volumes/b2_pgdata/_data
 
 {"gpa":5.96,"host":"da4d7da43264","name":"B. Student","register":"1911260002","semester":5,"source":"postgres","status":"REVIEW"}
 
+
+===== image build timings, --no-cache =====
+slim_build_s=27
+full_build_s=44

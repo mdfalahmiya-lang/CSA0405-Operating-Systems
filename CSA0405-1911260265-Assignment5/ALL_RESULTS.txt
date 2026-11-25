@@ -240,6 +240,17 @@ tcp   LISTEN 0      511              [::]:80            [::]:*    users:(("nginx
 {"host":"Falah","pid":3415,"status":"ok","time":"2026-11-24T17:44:35.025887+00:00","uptime_s":461.3}
 
 
+===== log script scaling check: 999,999 lines, 57 MB =====
+$ awk '{print $7}' big.log | sort | uniq -c | sort -k2,2n
+awk_pipeline_ms=479
+ 571428 200
+ 142857 302
+ 142857 403
+ 142857 404
+$ awk '{print $1}' big.log | sort | uniq -c | sort -k1,1nr | head -1
+busiest_pipeline_ms=433
+ 571428 10.0.0.5
+
 
 ============================================================
   B2 - saved output
@@ -325,6 +336,10 @@ Name=b2_pgdata Driver=local Mountpoint=/var/lib/docker/volumes/b2_pgdata/_data
 
 {"gpa":5.96,"host":"da4d7da43264","name":"B. Student","register":"1911260002","semester":5,"source":"postgres","status":"REVIEW"}
 
+
+===== image build timings, --no-cache =====
+slim_build_s=27
+full_build_s=44
 
 
 ============================================================
