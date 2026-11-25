@@ -1,0 +1,19 @@
+/var/log/result-portal/*.log {
+    weekly
+    rotate 8
+    compress
+    missingok
+    notifempty
+    copytruncate
+    create 0640 portal adm
+}
+
+/var/log/nginx/result-portal*.log {
+    weekly
+    rotate 8
+    compress
+    missingok
+    notifempty
+    copytruncate
+    create 0640 www-data adm
+}

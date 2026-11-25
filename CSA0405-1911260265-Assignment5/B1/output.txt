@@ -1,0 +1,221 @@
+===== B1.1 live system observation =====
+===== date / host =====
+Tue Nov 24 17:44:27 UTC 2026
+Falah
+Linux Falah 6.18.58.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Tue Oct 27 00:24:11 UTC 2026 x86_64 GNU/Linux
+
+===== cpu =====
+20
+CPU(s):                                  20
+On-line CPU(s) list:                     0-19
+Model name:                              13th Gen Intel(R) Core(TM) i7-13645HX
+Thread(s) per core:                      2
+Core(s) per socket:                      10
+Socket(s):                               1
+Virtualization:                          VT-x
+Virtualization type:                     full
+NUMA node0 CPU(s):                       0-19
+
+===== memory =====
+               total        used        free      shared  buff/cache   available
+Mem:           7.6Gi       1.7Gi       4.4Gi        18Mi       1.6Gi       5.9Gi
+Swap:          2.0Gi          0B       2.0Gi
+
+MemTotal:        7980896 kB
+MemFree:         4646952 kB
+MemAvailable:    6154464 kB
+Buffers:           29848 kB
+Cached:          1606740 kB
+
+===== processes (top 12 by CPU) =====
+    PID    PPID USER     %CPU %MEM   RSS STAT COMMAND
+   5389    5342 root     97.5  9.2 741984 Sl  qemu-system-x86
+   6650    4577 10001    70.0  0.1 15592 Rs   python
+    343       1 root      7.4  0.9 72112 Ssl  containerd
+   2213       1 root      7.1  1.4 117424 Ssl dockerd
+   6636    6633 root      4.5  0.0  3876 Ss+  bash
+   4778    2213 root      4.3  0.1 12176 Sl   docker-proxy
+   4849    4740 10001     4.3  0.4 35544 Sl   gunicorn
+   4851    4740 10001     4.2  0.4 35556 Sl   gunicorn
+   4740    4716 10001     0.6  0.3 28412 Ss   gunicorn
+   3860    3853 portal    0.6  0.4 38384 Sl+  gunicorn
+   3859    3853 portal    0.6  0.4 38508 Sl+  gunicorn
+   4612    4577 10001     0.6  0.3 28376 Ss   gunicorn
+
+===== top (batch, first 18 lines) =====
+top - 17:44:27 up 19 min,  1 user,  load average: 0.77, 0.79, 0.53
+Tasks: 100 total,   3 running,  97 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  4.0 us,  3.1 sy,  0.0 ni, 91.6 id,  0.0 wa,  0.0 hi,  1.3 si,  0.0 st 
+MiB Mem :   7793.8 total,   4532.6 free,   1788.6 used,   1655.2 buff/cache     
+MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   6005.2 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   6650 10001     20   0   27880  21200  10548 R  45.5   0.3   0:00.24 python
+   2213 root      20   0 3377688 117424  58196 S  27.3   1.5   1:02.14 dockerd
+   5389 root      20   0 4107396 741964  23956 R  18.2   9.3   0:47.01 qemu-sy+
+   3414 portal    20   0  120440  36412  11188 S   9.1   0.5   0:00.22 gunicorn
+   6680 root      20   0    8832   6092   3980 R   9.1   0.1   0:00.01 top
+      1 root      20   0   25044  15880  11580 S   0.0   0.2   0:03.21 systemd
+      2 root      20   0    3820   2520   2392 S   0.0   0.0   0:00.02 init-sy+
+      3 root      20   0    3680   2220   2120 S   0.0   0.0   0:00.00 init-wa+
+      8 root      20   0    3820   2296   2184 S   0.0   0.0   0:00.00 init
+     48 root      19  -1   49920  26980  25688 S   0.0   0.3   0:00.32 systemd+
+     80 systemd+  20   0   22416  14464  11948 S   0.0   0.2   0:00.11 systemd+
+
+===== vmstat 1 5 =====
+procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
+ 1  0      0 4639848  29868 1665320    0    0  1126  3010 5304    3  1  1 98  0  0  0
+ 0  0      0 4650424  29900 1669204    0    0     0 37272 10114 11681  2  3 93  0  0  2
+ 1  0      0 4645240  29900 1672352    0    0     0     0 9668 10877  0  2 96  0  0  1
+ 0  0      0 4643984  29900 1677344    0    0     0     0 9372 10786  1  2 95  0  0  2
+ 2  0      0 4641308  29904 1678824    0    0     0 33428 7923 8887  0  2 96  0  0  1
+
+===== disk =====
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdd       1007G  6.0G  950G   1% /
+Filesystem       Inodes  IUsed    IFree IUse% Mounted on
+/dev/sdd       67108864 115311 66993553    1% /
+Linux 6.18.58.1-microsoft-standard-WSL2 (Falah) 	11/24/26 	_x86_64_	(20 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.99    0.00    1.29    0.12    0.00   97.60
+
+Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+sda              0.62    137.47     0.37  37.75    0.56   222.53    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.03
+sdb              0.12      6.14     0.08  38.63    0.66    49.60    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.01
+sdc              0.08      1.70     0.00   0.00    0.13    20.94    0.00      0.00     0.00   0.00    1.50     2.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    2.00    0.00   0.00
+sdd              8.41    977.71     4.69  35.79    0.86   116.27   32.59   3061.08    71.06  68.56    9.38    93.93    1.28    856.69     0.18  12.14    0.33   667.66    7.80    0.92    0.32   2.51
+
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           1.64    0.00    2.43    0.00    0.00   95.93
+
+Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           1.28    0.00    3.11    0.30    0.00   95.32
+
+Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+sdd              0.00      0.00     0.00   0.00    0.00     0.00    2.00     64.00    14.00  87.50   20.00    32.00    1.00      8.00     0.00   0.00    0.00     8.00    2.00    7.00    0.05   4.00
+
+
+
+===== network sockets =====
+Netid State  Recv-Q Send-Q  Local Address:Port  Peer Address:PortProcess                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+udp   UNCONN 0      0             0.0.0.0:36019      0.0.0.0:*    users:(("qemu-system-x86",pid=5389,fd=15))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+udp   UNCONN 0      0          127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=80,fd=18))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+udp   UNCONN 0      0       127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=80,fd=16))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+udp   UNCONN 0      0      10.255.255.254:53         0.0.0.0:*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+udp   UNCONN 0      0           127.0.0.1:323        0.0.0.0:*    users:(("chronyd",pid=322,fd=4))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+udp   UNCONN 0      0           127.0.0.1:323        0.0.0.0:*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+udp   UNCONN 0      0             0.0.0.0:38046      0.0.0.0:*    users:(("qemu-system-x86",pid=5389,fd=42))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+udp   UNCONN 0      0             0.0.0.0:55787      0.0.0.0:*    users:(("qemu-system-x86",pid=5389,fd=38))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+udp   UNCONN 0      0               [::1]:323           [::]:*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+udp   UNCONN 0      0               [::1]:323           [::]:*    users:(("chronyd",pid=322,fd=5))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+tcp   LISTEN 0      1             0.0.0.0:2222       0.0.0.0:*    users:(("qemu-system-x86",pid=5389,fd=19))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+tcp   LISTEN 0      1             0.0.0.0:8081       0.0.0.0:*    users:(("qemu-system-x86",pid=5389,fd=18))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+tcp   LISTEN 0      4096          0.0.0.0:8000       0.0.0.0:*    users:(("docker-proxy",pid=4675,fd=7))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+tcp   LISTEN 0      4096          0.0.0.0:8003       0.0.0.0:*    users:(("docker-proxy",pid=4778,fd=7))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+tcp   LISTEN 0      511           0.0.0.0:80         0.0.0.0:*    users:(("nginx",pid=1216,fd=5),("nginx",pid=1215,fd=5),("nginx",pid=1214,fd=5),("nginx",pid=1212,fd=5),("nginx",pid=1211,fd=5),("nginx",pid=1210,fd=5),("nginx",pid=1209,fd=5),("nginx",pid=1208,fd=5),("nginx",pid=1207,fd=5),("nginx",pid=1206,fd=5),("nginx",pid=1205,fd=5),("nginx",pid=1204,fd=5),("nginx",pid=1202,fd=5),("nginx",pid=1201,fd=5),("nginx",pid=1200,fd=5),("nginx",pid=1199,fd=5),("nginx",pid=1198,fd=5),("nginx",pid=1197,fd=5),("nginx",pid=1196,fd=5),("nginx",pid=1195,fd=5),("nginx",pid=228,fd=5))
+tcp   LISTEN 0      4096       127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=80,fd=19))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+tcp   LISTEN 0      2048        127.0.0.1:8001       0.0.0.0:*    users:(("gunicorn",pid=3415,fd=7),("gunicorn",pid=3414,fd=7),("gunicorn",pid=3412,fd=7))                                                                                                                                                                                                                                                                                                                                                                                                                                      
+tcp   LISTEN 0      2048        127.0.0.1:8002       0.0.0.0:*    users:(("gunicorn",pid=3860,fd=5),("gunicorn",pid=3859,fd=5),("gunicorn",pid=3853,fd=5))                                                                                                                                                                                                                                                                                                                                                                                                                                      
+tcp   LISTEN 0      1000   10.255.255.254:53         0.0.0.0:*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+tcp   LISTEN 0      4096        127.0.0.1:36571      0.0.0.0:*    users:(("containerd",pid=343,fd=14))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+tcp   LISTEN 0      5             0.0.0.0:9000       0.0.0.0:*    users:(("python3",pid=5358,fd=3))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+tcp   LISTEN 0      4096    127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=80,fd=17))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+tcp   LISTEN 0      4096             [::]:8000          [::]:*    users:(("docker-proxy",pid=4682,fd=7))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+tcp   LISTEN 0      4096             [::]:8003          [::]:*    users:(("docker-proxy",pid=4785,fd=7))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+tcp   LISTEN 0      511              [::]:80            [::]:*    users:(("nginx",pid=1216,fd=6),("nginx",pid=1215,fd=6),("nginx",pid=1214,fd=6),("nginx",pid=1212,fd=6),("nginx",pid=1211,fd=6),("nginx",pid=1210,fd=6),("nginx",pid=1209,fd=6),("nginx",pid=1208,fd=6),("nginx",pid=1207,fd=6),("nginx",pid=1206,fd=6),("nginx",pid=1205,fd=6),("nginx",pid=1204,fd=6),("nginx",pid=1202,fd=6),("nginx",pid=1201,fd=6),("nginx",pid=1200,fd=6),("nginx",pid=1199,fd=6),("nginx",pid=1198,fd=6),("nginx",pid=1197,fd=6),("nginx",pid=1196,fd=6),("nginx",pid=1195,fd=6),("nginx",pid=228,fd=6))
+
+===== B1.2 completed log-summary program =====
+Requests per status code:
+  200 4
+  302 1
+  403 1
+  404 1
+Busiest client:
+  10.0.0.5 4
+Total bytes sent: 43200
+
+===== B1.2 live Nginx log report =====
+== /var/log/nginx/result-portal.access.log ==
+requests: 37
+requests per status code:
+  200 25
+  404 12
+busiest clients:
+  127.0.0.1       37
+busiest paths:
+  /does-not-exist      12
+  /api/results/1911260265 12
+  /                    12
+  /ping                1
+server errors (5xx): 0
+client errors (4xx): 12
+
+===== B1.2 disk alert (normal and forced) =====
+OK 2026-11-24T17:44:34Z path=/ used=1% free_kb=995793692 threshold=80%
+OK 2026-11-24T17:44:34Z path=/ used=1% free_kb=995793692 threshold=101%
+
+===== B1.2 crontab =====
+$ crontab -l (root)
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# B1.2: hourly log summary and quarter-hourly disk-space alert.
+0 * * * * /opt/result-portal/scripts/nginx_log_report.sh >> /var/log/result-portal/nginx_log_report.out 2>&1
+*/15 * * * * /opt/result-portal/scripts/disk_alert.sh 80 / >> /var/log/result-portal/disk_alert.out 2>&1
+# Rotate portal and Nginx logs daily at 02:30.
+30 2 * * * /usr/sbin/logrotate /etc/logrotate.d/result-portal
+
+===== B1.3 systemd unit =====
+enabled
+enabled
+enabled
+● result-portal.service - SIMATS result portal (gunicorn)
+     Loaded: loaded (/etc/systemd/system/result-portal.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-11-24 17:36:53 UTC; 7min ago
+ Invocation: 685188e0db274633a37156b04b0a7b02
+   Main PID: 3412 (gunicorn)
+      Tasks: 5 (limit: 9341)
+     Memory: 61M (peak: 61.3M)
+        CPU: 748ms
+     CGroup: /system.slice/result-portal.service
+             ├─3412 /opt/result-portal/venv/bin/python3 /opt/result-portal/venv/bin/gunicorn --bind 127.0.0.1:8001 --workers 2 --threads 4 --timeout 30 --access-logfile /var/log/result-portal/access.log --error-logfile /var/log/result-portal/error.log app:app
+             ├─3414 /opt/result-portal/venv/bin/python3 /opt/result-portal/venv/bin/gunicorn --bind 127.0.0.1:8001 --workers 2 --threads 4 --timeout 30 --access-logfile /var/log/result-portal/access.log --error-logfile /var/log/result-portal/error.log app:app
+             └─3415 /opt/result-portal/venv/bin/python3 /opt/result-portal/venv/bin/gunicorn --bind 127.0.0.1:8001 --workers 2 --threads 4 --timeout 30 --access-logfile /var/log/result-portal/access.log --error-logfile /var/log/result-portal/error.log app:app
+
+Nov 24 17:36:53 Falah systemd[1]: Started result-portal.service - SIMATS result portal (gunicorn).
+
+===== B1.3 Nginx configuration test =====
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+
+===== B1.3 firewall =====
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), deny (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere                  
+80/tcp                     ALLOW IN    Anywhere                  
+443/tcp                    ALLOW IN    Anywhere                  
+22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+80/tcp (v6)                ALLOW IN    Anywhere (v6)             
+443/tcp (v6)               ALLOW IN    Anywhere (v6)             
+
+
+===== B1.3 listening sockets =====
+tcp   LISTEN 0      511           0.0.0.0:80         0.0.0.0:*    users:(("nginx",pid=1216,fd=5),("nginx",pid=1215,fd=5),("nginx",pid=1214,fd=5),("nginx",pid=1212,fd=5),("nginx",pid=1211,fd=5),("nginx",pid=1210,fd=5),("nginx",pid=1209,fd=5),("nginx",pid=1208,fd=5),("nginx",pid=1207,fd=5),("nginx",pid=1206,fd=5),("nginx",pid=1205,fd=5),("nginx",pid=1204,fd=5),("nginx",pid=1202,fd=5),("nginx",pid=1201,fd=5),("nginx",pid=1200,fd=5),("nginx",pid=1199,fd=5),("nginx",pid=1198,fd=5),("nginx",pid=1197,fd=5),("nginx",pid=1196,fd=5),("nginx",pid=1195,fd=5),("nginx",pid=228,fd=5))
+tcp   LISTEN 0      2048        127.0.0.1:8001       0.0.0.0:*    users:(("gunicorn",pid=3415,fd=7),("gunicorn",pid=3414,fd=7),("gunicorn",pid=3412,fd=7))                                                                                                                                                                                                                                                                                                                                                                                                                                      
+tcp   LISTEN 0      511              [::]:80            [::]:*    users:(("nginx",pid=1216,fd=6),("nginx",pid=1215,fd=6),("nginx",pid=1214,fd=6),("nginx",pid=1212,fd=6),("nginx",pid=1211,fd=6),("nginx",pid=1210,fd=6),("nginx",pid=1209,fd=6),("nginx",pid=1208,fd=6),("nginx",pid=1207,fd=6),("nginx",pid=1206,fd=6),("nginx",pid=1205,fd=6),("nginx",pid=1204,fd=6),("nginx",pid=1202,fd=6),("nginx",pid=1201,fd=6),("nginx",pid=1200,fd=6),("nginx",pid=1199,fd=6),("nginx",pid=1198,fd=6),("nginx",pid=1197,fd=6),("nginx",pid=1196,fd=6),("nginx",pid=1195,fd=6),("nginx",pid=228,fd=6))
+
+===== B1.3 portal through Nginx and directly =====
+{"host":"Falah","pid":3414,"status":"ok","time":"2026-11-24T17:44:35.017726+00:00","uptime_s":461.4}
+
+{"host":"Falah","pid":3415,"status":"ok","time":"2026-11-24T17:44:35.025887+00:00","uptime_s":461.3}
+

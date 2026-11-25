@@ -1,0 +1,30 @@
+[Unit]
+Description=SIMATS result portal (gunicorn)
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=portal
+Group=portal
+WorkingDirectory=/opt/result-portal
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PORTAL_ENV=production
+ExecStart=/opt/result-portal/venv/bin/gunicorn \
+    --bind 127.0.0.1:8001 \
+    --workers 2 \
+    --threads 4 \
+    --timeout 30 \
+    --access-logfile /var/log/result-portal/access.log \
+    --error-logfile /var/log/result-portal/error.log \
+    app:app
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/result-portal
+
+[Install]
+WantedBy=multi-user.target
